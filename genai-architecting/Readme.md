@@ -4,6 +4,9 @@
 - Enable students to access study activities through a language learning portal.
 - Utilize a Retrieval-Augmented Generation (RAG) model for sentence construction.
 - Implement guardrails for input and output validation.
+- The company wants to invest in owning their infrastructure because there is a concern about the privacy of user data.
+- The company will choose on-prem server as the cost of managed services for GenAI might greatly rise in the future.
+- They want to invest an AI PC where they can afford to spend 10-15K. They have 300 active students, and students are located within the city of Athens.
 
 ## Assumptions
 - The system assumes that users have authenticated access via the language portal.
