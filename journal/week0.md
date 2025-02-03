@@ -23,3 +23,8 @@ These diagrams should guide discussions on **infrastructure choices, integration
 - Focuses on **what** is being built, not **how** it will be implemented.  
 
 [View Diagram](https://lucid.app/lucidchart/86d79ef3-7e66-4ae4-aa6b-e58b7ef201c2/edit?viewport_loc=-77%2C175%2C2992%2C1391%2C0_0&invitationId=inv_86590b77-e099-4abc-bdb6-96519ed9ea43)
+
+
+## 2025-02-03
+
+Completed a conceptual diagram in Lucidchart based on the instructor's work to illustrate key components of a GenAI workload. I also documented architectural considerations in a README file to align with the business and technical goals.
