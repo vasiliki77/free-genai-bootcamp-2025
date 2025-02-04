@@ -3,7 +3,7 @@
 ## Table of Contents
 
 - [GenAI Architecting](#genai-architecting)
-- [](#)
+- [Choosing appropriate model](#choosing-appropriate-model)
   - [](#)
   - [](#)
 
@@ -31,6 +31,8 @@ Completed a conceptual diagram in Lucidchart based on the instructor's work to i
 
 > 2025-02-04
 
+## Choosing appropriate model
+
 I realised that Granite 3.0 might need further finetuning to be used for Ancient Greek. So I am trying to identify which LLM model would be more appropriate for my use case. 
 
 | **Model**                 | **Pricing** | **License**                           | **Who Can Use It**                                              | **AI PC Specs Needed**                                         | **Use Case & Business Model Alignment**                                                                 |
@@ -44,7 +46,7 @@ I realised that Granite 3.0 might need further finetuning to be used for Ancient
 
 ---
 
-### 🚀 **Comparison of IBM Granite 3.0 with Ancient Greek translating Models**
+### Comparison of IBM Granite 3.0 with Ancient Greek translating Models
 
 | **Model**                   | **Functionality Compared to IBM Granite** | **Key Differences** |
 |-----------------------------|-------------------------------------------|---------------------|
