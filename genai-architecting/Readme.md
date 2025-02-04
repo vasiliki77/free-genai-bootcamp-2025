@@ -25,4 +25,4 @@
 - **Integration:** The study activities should seamlessly integrate with the language portal.
 - **Performance:** Optimize response times for AI-generated study activities.
 - **Security:** Implement guardrails to ensure appropriate AI-generated content.
-- **Model Selection:** We're considering using IBM Granite because it is a truly open-source model with traceable training data, helping to avoid copyright issues while providing transparency into model operations. [IBM Granite on Hugging Face](https://huggingface.co/ibm-granite).
+- **Model Selection:** We're considering using Mistral AI because it’s ideal for text generation and interactive language learning activities. [Mistral AI on Hugging Face](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3) is instruction-tuned LLM focused on text generation, task completion, and conversational tasks.
