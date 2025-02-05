@@ -4,8 +4,9 @@
 
 - [GenAI Architecting](#genai-architecting)
 - [Choosing appropriate model](#choosing-appropriate-model)
-  - [](#)
-  - [](#)
+  - [Final Verdict](#final-verdict)
+  - [Next steps](#next-steps)
+- [Testing Mistral AI on my Intel AI PC](#testing-mistral-ai-on-my-intel-ai-pc)
 
 > 2025-02-02
 
@@ -56,7 +57,7 @@ I realised that Granite 3.0 might need further finetuning to be used for Ancient
 
 ---
 
-###  **Final Verdict**
+### Final Verdict
 
 -  **Closest Match:** **Mistral 7B Instruct**  
    - **Why:** Both Mistral and IBM Granite are versatile, capable of handling **instruction-following tasks**, **text generation**, and **multi-purpose NLP applications** without being restricted to conversational or translation-specific roles.  
@@ -122,7 +123,11 @@ jupyter lab --no-browser --allow-root --ip 0.0.0.0
 
 
 ```python
+from huggingface_hub import login
 from transformers import AutoModelForCausalLM, AutoTokenizer
+
+# Login to Hugging Face
+login("YOUR_HF_TOKEN")
 
 # Load Mistral 7B Instruct with 4-bit quantization
 model_name = "mistralai/Mistral-7B-Instruct-v0.3"
@@ -134,6 +139,7 @@ model = AutoModelForCausalLM.from_pretrained(
     load_in_4bit=True  # Applies quantization
 )
 
+# Load the tokenizer
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 # Test prompt for Ancient Greek translation
@@ -145,3 +151,89 @@ outputs = model.generate(**inputs, max_length=50)
 response = tokenizer.decode(outputs[0], skip_special_tokens=True)
 print(response)
 ```
+---
+
+> 2025-02-05
+
+## Testing Mistral AI on my Intel AI PC
+
+Today, trying to follow the above steps, I came across this error:
+```
+/home/myhome/miniconda3/envs/mistral_env/lib/python3.10/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+```
+The resolution was to stop jupyterlab, and run the following in mistral_env.
+```bash
+# Install ipywidgets
+conda install -c conda-forge ipywidgets -y
+# Update JupyterLab to ensure compatibility
+conda update -c conda-forge jupyterlab -y
+```
+
+After JupyterLab is restarted:
+
+
+```bash
+pip install torch transformers accelerate bitsandbytes sentencepiece protobuf
+```
+
+Although my system looks like it has GPU, I came across some error about CUDA. So I had to proceed with **CPU-only** and didn't need `bitsandbytes` (which relies on CUDA).
+
+```bash
+pip uninstall bitsandbytes
+```
+
+
+Had to create READ token and log in to **Hugging Face**:  
+
+```python
+from huggingface_hub import login
+
+login("YOUR_HF_TOKEN")
+```
+
+
+Since I am using CPU, **I avoid bitsandbytes quantization**:
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+# Load the model without quantization
+model_name = "mistralai/Mistral-7B-Instruct-v0.3"
+model = AutoModelForCausalLM.from_pretrained(
+    model_name,
+    device_map={"": "cpu"},  # Force CPU usage
+    torch_dtype="auto"       # Use the best dtype for CPU
+)
+
+# Load the tokenizer
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+```
+
+Below I had to apply few-shot prompting because the model was returning the translation in latin characters or whithout [Greek diacritics](https://en.wikipedia.org/wiki/Greek_diacritics), which are not used in modern Greek. 
+```python
+prompt = (
+    "Translate the following sentences into Ancient Greek using the Greek alphabet:\n"
+    "1. 'Wisdom is virtue.' → Σοφία ἐστὶν ἀρετή.\n"
+    "2. 'Life is short.' → Ὁ βίος βραχύς ἐστιν.\n"
+    "3. 'Knowledge is power.' →"
+)
+
+# Tokenize the input
+inputs = tokenizer(prompt, return_tensors="pt")
+
+# Generate the output with enough tokens for full completion
+outputs = model.generate(
+    **inputs,
+    max_new_tokens=40,  # Ensure it has enough tokens to complete the response
+    pad_token_id=tokenizer.eos_token_id
+)
+
+# Decode and print the result
+response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+print(response)
+```
+
+I had to increase 'max_new_tokens' to 40, otherwise the output was incomplete. 
+
+Now that I know the model can perform on my local machine, I can proceed with Sentence Constructor. 
