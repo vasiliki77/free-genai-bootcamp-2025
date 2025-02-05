@@ -7,6 +7,7 @@
   - [Final Verdict](#final-verdict)
   - [Next steps](#next-steps)
 - [Testing Mistral AI on my Intel AI PC](#testing-mistral-ai-on-my-intel-ai-pc)
+  - [Tested Modern Greek to Ancient Greek translation](#tested-modern-greek-to-ancient-greek-translation)
 
 > 2025-02-02
 
@@ -210,7 +211,7 @@ model = AutoModelForCausalLM.from_pretrained(
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 ```
 
-Below I had to apply few-shot prompting because the model was returning the translation in latin characters or whithout [Greek diacritics](https://en.wikipedia.org/wiki/Greek_diacritics), which are not used in modern Greek. 
+Below I had to apply few-shot prompting because the model was returning the translation in latin characters or without [Greek diacritics](https://en.wikipedia.org/wiki/Greek_diacritics), which are not used in modern Greek. 
 ```python
 prompt = (
     "Translate the following sentences into Ancient Greek using the Greek alphabet:\n"
@@ -237,3 +238,38 @@ print(response)
 I had to increase 'max_new_tokens' to 40, otherwise the output was incomplete. 
 
 Now that I know the model can perform on my local machine, I can proceed with Sentence Constructor. 
+
+### Tested Modern Greek to Ancient Greek translation
+
+```python
+prompt = (
+    "Translate the following sentences into Ancient Greek using the Greek alphabet:\n"
+    "1. 'Η σοφία είναι αρετή.' → Σοφία ἐστὶν ἀρετή.\n"
+    "2. 'Η ζωή είναι μικρή.' → Ὁ βίος βραχύς ἐστιν.\n"
+    "3. 'Η γνώση είναι δύναμη.' →"
+)
+
+# Tokenize the prompt
+inputs = tokenizer(prompt, return_tensors="pt")
+
+# Generate output using max_new_tokens instead of max_length
+outputs = model.generate(
+    **inputs,
+    max_new_tokens=30, 
+    pad_token_id=tokenizer.eos_token_id
+)
+
+# Decode and display the output
+response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+print(response)
+```
+
+Output:
+```
+Translate the following sentences into Ancient Greek using the Greek alphabet:
+1. 'Η σοφία είναι αρετή.' → Σοφία ἐστὶν ἀρετή.
+2. 'Η ζωή είναι μικρή.' → Ὁ βίος βραχύς ἐστιν.
+3. 'Η γνώση είναι δύναμη.' → Γνώσις ἐστὶν δύναμις.
+```
+
+This means that it can also handle Modern Greek to Ancient Greek translation.
