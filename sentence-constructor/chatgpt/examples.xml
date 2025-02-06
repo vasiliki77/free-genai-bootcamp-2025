@@ -1,0 +1,72 @@
+<example>
+    <user:input>
+        Wildboars are at the door, did you leave the garbage out?
+    </user:input>
+    <score>4</score>
+    <score_reasons>
+    - BAD: in the vocabulary table it did not show greek diacritics, the cells are just blank
+    - BAD: the beginner sentence is unncessary, should just start showing the vocabulary table
+    - BAD: The sentence structure says too much - we really want something that is conceptual like this: [Location] [Subject] [Verb], [Object] [Verb-past]?
+    </score_reasons>
+    <assistant:output>
+    Let's break down the sentence into smaller parts. Here's a possible table of vocabulary to get you started:
+
+    | Ancient Greek         | Modern Greek          | English   | Polytonic Keyboard Instructions |
+    |                       | αγριόχοιρος	        | wildboar  |                                  |
+    |                       | πόρτα                 | door      |                           |
+    |                       | σκουπίδια	            | garbage   |                           |
+    |                       | αφήνω	                | leave     |                               |
+
+    Now, let's think about the sentence structure. We have two clauses: "Wildboars are at the door" and "did you leave the garbage out?".
+    For the first clause, we can use the verb (εἰμί) which means "to exist" or "to be present". We'll need to figure out the correct form of the verb to use.
+    For the second clause, we can use the verb (ἀφίημι) which is a way of saying "to leave". Again, we'll need to figure out the correct form of the verb to use.
+
+    Here's a possible sentence structure:
+
+    [Clause 1: Wildboars are at the door]
+    [Subject] παρὰ τῇ [Location]  [Verb] εἰσίν
+    [Clause 2: did you leave the garbage out?]
+    [Verb] ἀφῆκας
+
+    Your turn! Can you try to fill in the blanks using the vocabulary and sentence structure provided?
+    </assistant:output>
+</example>
+
+<example>
+    <user:input>
+        Wildboars are at the door, did you leave the garbage out?
+    </user:input>
+    <score>10/score>
+    <score_reasons>
+    - GOOD: Doesn't provide verbose text at the start, and shows vocabulary immediatly
+    - GOOD: Shows conceptual sentence structure
+    - GOOD: Clues don't give away any of the tense of conjugations
+    </score_reasons>
+    <assistant:output>
+    Cheatsheet:
+Here’s the completed table with the appropriate Ancient Greek words and types:
+
+| Word               | Ancient Greek       | Type   |
+|--------------------|---------------------|--------|
+| wildboar           | κάπρος / ἄρκτος     | Noun   |
+| door               | θύρα / θυρίς        | Noun   |
+| garbage            | ῥύπαρα / σκύβαλα    | Noun   |
+| to be (location)   | εἰμί / ἔνι / ὑπάρχω  | Verb   |
+| to leave           | λείπω / ἀφίημι       | Verb   |
+
+    Sentence structure:
+    [Location] [Subject] [Verb], [Object] [Verb-past]?
+
+    Considerations:
+    - This is a compound sentence with two parts connected by a comma
+    - The first part is stating a location where something exists
+    - The second part is asking about a past action
+
+    Possible next steps:
+    - attempt an answer
+    - ask clues about location marking
+    - ask clues about how to connect two sentences
+    - ask clues about question formation
+    - ask clues about verb conjugation
+    </assistant:output>
+</example>
