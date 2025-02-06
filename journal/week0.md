@@ -8,6 +8,7 @@
   - [Next steps](#next-steps)
 - [Testing Mistral AI on my Intel AI PC](#testing-mistral-ai-on-my-intel-ai-pc)
   - [Tested Modern Greek to Ancient Greek translation](#tested-modern-greek-to-ancient-greek-translation)
+- [Sentence Constructor](#sentence-constructor)
 
 > 2025-02-02
 
@@ -273,3 +274,11 @@ Translate the following sentences into Ancient Greek using the Greek alphabet:
 ```
 
 This means that it can also handle Modern Greek to Ancient Greek translation.
+
+> 2025-02-06
+
+## Sentence Constructor
+
+Today I implemented sentence construction on Chat GPT 4o. By creating a new project I was able to upload a xml file with an example and instructions. 
+Then, just by providing an english sentence in a chat, the output would show Vocabulary Table, Sentence Structure, Clues and Considerations. 
+I was able add a column specifically for the letters with diacritic marks and how they should be typed on a keyboard, by providing example and also documentation on the [Greek Polytonic Unicode](https://commons.wikimedia.org/wiki/File:KB_Greek_polytonic_Unicode.svg).
