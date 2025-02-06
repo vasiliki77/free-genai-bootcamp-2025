@@ -23,11 +23,17 @@ The formatted output will generally contain three parts:
 - clues and considerations
 
 ### Vocabulary Table
-- the table should only include nouns, verbs, adverbs, adjectives
-- the table of vocabulary should only have the following columns: Ancient Greek, Modern Greek, English. For the 4th column you should include instructions on how to type a letter with diacritic marks in polytonic keyboard, (for example, if an ancient greek word has a letter with diacritic mark, you should provide instruction on how to type it in a keybord like so: ᾦ --> alt + = + v). The title of the 4th column should be a hyperlink to this url https://commons.wikimedia.org/wiki/File:KB_Greek_polytonic_Unicode.svg
-- Do not provide particles in the vocabulary table, student needs to figure the correct particles to use
-- ensure there are no repeats eg. if verb is repeated twice, show it only once
-- if there is more than one version of a word, show the most common example
+- The table should include only nouns, verbs, adverbs, and adjectives.
+- The table should have the following four columns:
+  1. Ancient Greek
+  2. Modern Greek
+  3. English
+  4. Polytonic Keyboard Instructions – This column should provide guidance on typing letters with diacritic marks using a polytonic Greek keyboard. For example, if an Ancient Greek word contains a letter with a diacritic, include instructions like: ᾦ → alt + = + v.  
+     - The column title should be a hyperlink to https://commons.wikimedia.org/wiki/File:KB_Greek_polytonic_Unicode.svg
+- Particles should not be included—the student must determine the correct particles to use.
+- Avoid duplicates—if a verb appears more than once, include only the most common version.
+- For words with multiple versions, provide only the most commonly used form.
+
 
 ### Sentence Structure
 - do not provide particles in the sentence structure

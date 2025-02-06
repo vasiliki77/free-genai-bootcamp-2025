@@ -11,11 +11,12 @@
     <assistant:output>
     Let's break down the sentence into smaller parts. Here's a possible table of vocabulary to get you started:
 
-    | Ancient Greek         | Modern Greek          | English   | Polytonic Keyboard Instructions |
-    |                       | αγριόχοιρος	        | wildboar  |                                  |
-    |                       | πόρτα                 | door      |                           |
-    |                       | σκουπίδια	            | garbage   |                           |
-    |                       | αφήνω	                | leave     |                               |
+    | Ancient Greek         | Modern Greek          | English   | [Polytonic Keyboard Instructions](https://commons.wikimedia.org/wiki/File:KB_Greek_polytonic_Unicode.svg) |
+    |-----------------------|----------------------|-----------|--------------------------------------|
+    | θύρα / θυρίς         | πόρτα                | door      |  |
+    | ῥύπαρα / σκύβαλα    | σκουπίδια            | garbage   | ῥ → alt + ' + r |  
+    | λείπω / ἀφίημι       | αφήνω                | leave     | ἀ → alt + ' + a |
+    | ᾦδή                  | τραγούδι              | sond / ode | ᾦ → alt + = + v |
 
     Now, let's think about the sentence structure. We have two clauses: "Wildboars are at the door" and "did you leave the garbage out?".
     For the first clause, we can use the verb (εἰμί) which means "to exist" or "to be present". We'll need to figure out the correct form of the verb to use.
