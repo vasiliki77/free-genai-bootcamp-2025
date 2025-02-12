@@ -9,12 +9,31 @@ A language learning school wants to build a prototype of learning portal which w
 
 ## Technical Requirements
 
-- The backend will be build using Go
+- The backend will be built using Go
 - The database will be SQLite3
 - The API will be built using Gin
+- Mage is a task runner for Go.
 - The API will always return JSON
-- There will be no authentication or authorization
-- Everything will be treated as a single user
+- There will no authentication or authorization
+- Everything be treated as a single user
+
+## Directory Structure
+
+```text
+backend_go/
+├── cmd/
+│   └── server/           # Main application entry point
+├── internal/
+│   ├── handlers/             # API handlers
+│   ├── models/          # Data models and database operations
+│   └── services/        # Business logic
+├── db/                  # Database-related files
+│   ├── migrations/      # SQL migration files
+│   └── seeds/          # Seed data JSON files
+├── magefile.go          # Mage task definitions
+├── words.db            # SQLite database
+└── go.mod              # Go module file
+```
 
 ## Database Schema
 
@@ -450,7 +469,7 @@ Response:
 }
 
 
-## Mage Tasks
+## Task Runner Tasks
 
 Mage is a make/rake-like build tool using Go that allows writing build tasks in pure Go code.
 It will be used to handle database initialization, migrations, and other maintenance tasks.
