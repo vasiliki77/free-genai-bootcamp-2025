@@ -2,6 +2,8 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
+	"path/filepath"
 	"time"
 )
 
@@ -150,12 +152,18 @@ type DB struct {
 
 // NewDB creates a new database connection.
 func NewDB(dataSourceName string) (*DB, error) {
+	fmt.Println("NewDB: Attempting to open database:", dataSourceName)
+	absDataSourceName, _ := filepath.Abs(dataSourceName)             // Get absolute path
+	fmt.Println("NewDB: Absolute database path:", absDataSourceName) // Log absolute path
 	db, err := sql.Open("sqlite3", dataSourceName)
 	if err != nil {
+		fmt.Println("NewDB: Error opening database:", err)
 		return nil, err
 	}
 	if err = db.Ping(); err != nil {
+		fmt.Println("NewDB: Database Ping error:", err)
 		return nil, err
 	}
+	fmt.Println("NewDB: Database connection successful.")
 	return &DB{db}, nil
 }
