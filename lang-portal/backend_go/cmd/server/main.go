@@ -14,7 +14,7 @@ func main() {
 	r := gin.Default()
 
 	// Initialize database
-	db, err := models.NewDB("words.db")
+	db, err := models.NewDB("../../words.db")
 	if err != nil {
 		log.Fatalf("Failed to initialize database: %v", err)
 	}
@@ -71,4 +71,4 @@ func main() {
 	}
 
 	log.Fatal(r.Run(":8080"))
-} 
+}
