@@ -23,5 +23,13 @@ func (s *WordService) GetWord(id int) (*models.WordDetailResponse, error) {
 // ListWords retrieves a paginated list of words.
 func (s *WordService) ListWords(page int, pageSize int) (*models.WordsResponse, error) {
 	// TODO: Implement database query to get a paginated list of words
-	return nil, nil
-} 
+ 	return &models.WordsResponse{
+ 		Items:      []models.WordWithStats{}, // Return an empty list of words for now
+ 		Pagination: &models.Pagination{
+ 			CurrentPage:   page,
+ 			ItemsPerPage:  pageSize,
+ 			TotalItems:    0, // пока что 0, to be updated with actual count
+ 			TotalPages:    1, // пока что 1, to be updated with actual count
+ 		},
+ 	}, nil
+}

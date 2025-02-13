@@ -9,11 +9,11 @@ import (
 
 // Word represents a vocabulary word.
 type Word struct {
-	ID          int             `json:"id"`
-	AncientGreek string          `json:"ancient_greek"`
-	Greek       string          `json:"greek"`
-	English     string          `json:"english"`
-	Parts       map[string]string `json:"parts"` // JSON map for word parts
+	ID           int               `json:"id"`
+	AncientGreek string            `json:"ancient_greek"`
+	Greek        string            `json:"greek"`
+	English      string            `json:"english"`
+	Parts        map[string]string `json:"parts"` // JSON map for word parts
 }
 
 // Group represents a thematic group of words.
@@ -24,10 +24,10 @@ type Group struct {
 
 // StudySession represents a study session.
 type StudySession struct {
-	ID              int       `json:"id"`
-	GroupID         int       `json:"group_id"`
-	CreatedAt       time.Time `json:"created_at"`
-	StudyActivity   int       `json:"study_activity"` // Changed to StudyActivity, assuming it refers to StudyActivity ID
+	ID            int       `json:"id"`
+	GroupID       int       `json:"group_id"`
+	CreatedAt     time.Time `json:"created_at"`
+	StudyActivity int       `json:"study_activity"` // Changed to StudyActivity, assuming it refers to StudyActivity ID
 }
 
 // StudyActivity represents a specific study activity.
@@ -51,16 +51,16 @@ type WordReviewItem struct {
 
 // Pagination struct for paginated responses.
 type Pagination struct {
-	CurrentPage   int `json:"current_page"`
-	TotalPages    int `json:"total_pages"`
-	TotalItems    int `json:"total_items"`
-	ItemsPerPage  int `json:"items_per_page"`
+	CurrentPage  int `json:"current_page"`
+	TotalPages   int `json:"total_pages"`
+	TotalItems   int `json:"total_items"`
+	ItemsPerPage int `json:"items_per_page"`
 }
 
 // WordWithStats represents a word with study statistics.
 type WordWithStats struct {
 	AncientGreek string `json:"ancient_greek"` // Changed to AncientGreek
-	Greek      string `json:"greek"`
+	Greek        string `json:"greek"`
 	English      string `json:"english"`
 	CorrectCount int    `json:"correct_count"`
 	WrongCount   int    `json:"wrong_count"`
@@ -68,12 +68,12 @@ type WordWithStats struct {
 
 // WordDetailResponse represents detailed information for a single word.
 type WordDetailResponse struct {
-	ID         int    `json:"id"` // Added ID for consistency
-	AncientGreek string `json:"ancient_greek"` // Changed to AncientGreek
-	Greek      string `json:"greek"`
-	English      string `json:"english"`
-	Parts    map[string]string `json:"parts"` // Added Parts
-	Stats    struct {
+	ID           int               `json:"id"`            // Added ID for consistency
+	AncientGreek string            `json:"ancient_greek"` // Changed to AncientGreek
+	Greek        string            `json:"greek"`
+	English      string            `json:"english"`
+	Parts        map[string]string `json:"parts"` // Added Parts
+	Stats        struct {
 		CorrectCount int `json:"correct_count"`
 		WrongCount   int `json:"wrong_count"`
 	} `json:"stats"`
@@ -108,8 +108,8 @@ type StudyActivitySessionResponse struct {
 	StudyActivityID int       `json:"study_activity_id"`
 }
 
-// LastStudySessionResponse represents the last study session for dashboard.
-type LastStudySessionResponse struct {
+// LastStudySession represents data for the last study session.
+type LastStudySession struct {
 	ID              int       `json:"id"`
 	GroupID         int       `json:"group_id"`
 	CreatedAt       time.Time `json:"created_at"`
@@ -119,28 +119,28 @@ type LastStudySessionResponse struct {
 
 // StudyProgressResponse represents study progress statistics for dashboard.
 type StudyProgressResponse struct {
-	TotalWordsStudied    int `json:"total_words_studied"`
+	TotalWordsStudied   int `json:"total_words_studied"`
 	TotalAvailableWords int `json:"total_available_words"`
 }
 
 // QuickStatsResponse represents quick statistics for dashboard.
 type QuickStatsResponse struct {
-	SuccessRate       float64 `json:"success_rate"`
-	TotalStudySessions int    `json:"total_study_sessions"`
-	TotalActiveGroups  int    `json:"total_active_groups"`
-	StudyStreakDays    int    `json:"study_streak_days"`
+	SuccessRate        float64 `json:"success_rate"`
+	TotalStudySessions int     `json:"total_study_sessions"`
+	TotalActiveGroups  int     `json:"total_active_groups"`
+	StudyStreakDays    int     `json:"study_streak_days"`
 }
 
 // WordsResponse is a container for a list of words and pagination info.
 type WordsResponse struct {
 	Items      []WordWithStats `json:"items"`
-	Pagination *Pagination    `json:"pagination"`
+	Pagination *Pagination     `json:"pagination"`
 }
 
 // GroupsResponse is a container for a list of groups and pagination info.
 type GroupsResponse struct {
 	Items      []GroupWithStats `json:"items"`
-	Pagination *Pagination     `json:"pagination"`
+	Pagination *Pagination      `json:"pagination"`
 }
 
 // DB struct to hold the database connection.
@@ -158,4 +158,4 @@ func NewDB(dataSourceName string) (*DB, error) {
 		return nil, err
 	}
 	return &DB{db}, nil
-} 
+}

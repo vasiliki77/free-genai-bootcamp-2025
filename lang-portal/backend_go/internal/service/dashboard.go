@@ -3,6 +3,7 @@ package service
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/lang-portal/backend_go/internal/models"
@@ -29,7 +30,7 @@ type LastStudySession struct {
 
 // StudyProgress represents study progress statistics.
 type StudyProgress struct {
-	TotalWordsStudied    int `json:"total_words_studied"`
+	TotalWordsStudied   int `json:"total_words_studied"`
 	TotalAvailableWords int `json:"total_available_words"`
 }
 
@@ -54,19 +55,28 @@ func (s *DashboardService) GetLastStudySession() (*LastStudySession, error) {
 		LIMIT 1
 	`
 
+	log.Printf("Executing query: %s", query)
+	row := s.db.QueryRow(query)
+	err := row.Err()
+	if err != nil {
+		log.Printf("QueryRow error: %v", err)
+		return nil, err
+	}
+
 	var session LastStudySession
-	err := s.db.QueryRow(query).Scan(
+	err = row.Scan(
 		&session.ID,
 		&session.GroupID,
 		&session.CreatedAt,
-		&session.StudyActivityID, // Corrected to StudyActivityID to match struct field
+		&session.StudyActivityID,
 		&session.GroupName,
 	)
+	if err != nil {
+		log.Printf("Error during Scan: %v", err)
+		return nil, err
+	}
 	if err == sql.ErrNoRows {
 		return nil, fmt.Errorf("no study sessions found")
-	}
-	if err != nil {
-		return nil, err
 	}
 	return &session, nil
 }
@@ -147,4 +157,4 @@ func (s *DashboardService) GetQuickStats() (*QuickStats, error) {
 	}
 
 	return &stats, nil
-} 
+}
