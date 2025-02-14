@@ -4,45 +4,41 @@ import (
 	"net/http"
 	"strconv"
 
+	"backend_go/internal/service"
+
 	"github.com/gin-gonic/gin"
-	"github.com/lang-portal/backend_go/internal/service"
 )
 
-// WordHandler holds the service for word related operations.
 type WordHandler struct {
-	wordService *service.WordService
+	service *service.WordService
 }
 
-// NewWordHandler creates a new WordHandler.
-func NewWordHandler(wordService *service.WordService) *WordHandler {
-	return &WordHandler{wordService: wordService}
+func NewWordHandler(s *service.WordService) *WordHandler {
+	return &WordHandler{service: s}
 }
 
-// GetWordsHandler handles the GET /api/words endpoint.
-func (h *WordHandler) GetWordsHandler(c *gin.Context) {
-	// TODO: Implement pagination parameters from query
-	page := 1
-	pageSize := 100 // Default page size
-	words, err := h.wordService.ListWords(page, pageSize)
+func (h *WordHandler) GetWords(c *gin.Context) {
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	perPage, _ := strconv.Atoi(c.DefaultQuery("per_page", "100"))
+
+	words, err := h.service.GetWords(page, perPage)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to list words"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, words)
 }
 
-// GetWordHandler handles the GET /api/words/:id endpoint.
-func (h *WordHandler) GetWordHandler(c *gin.Context) {
-	idStr := c.Param("id")
-	id, err := strconv.Atoi(idStr)
+func (h *WordHandler) GetWord(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid word ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 		return
 	}
 
-	word, err := h.wordService.GetWord(id)
+	word, err := h.service.GetWord(uint(id))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get word"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, word)

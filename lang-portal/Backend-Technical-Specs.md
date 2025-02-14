@@ -22,17 +22,17 @@ A language learning school wants to build a prototype of learning portal which w
 ```text
 backend_go/
 ├── cmd/
-│   └── server/           # Main application entry point
+│   └── server/              # Main application entry point
 ├── internal/
-│   ├── handlers/             # API handlers
-│   ├── models/          # Data models and database operations
-│   └── services/        # Business logic
-├── db/                  # Database-related files
-│   ├── migrations/      # SQL migration files
-│   └── seeds/          # Seed data JSON files
-├── magefile.go          # Mage task definitions
-├── words.db            # SQLite database
-└── go.mod              # Go module file
+│   ├── models/             # Data models and database operations
+│   ├── handlers/           # HTTP handlers
+│   ├── service/          # Business logic
+├── db/
+│   ├── migrations/        # SQL migration files
+│   └── seeds/            # Seed data files
+├── magefile.go            # Mage task definitions
+├── go.mod                 # Go module file
+└── words.db              # SQLite database (will be created)
 ```
 
 ## Database Schema
