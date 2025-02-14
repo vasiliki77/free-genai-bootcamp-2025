@@ -91,4 +91,69 @@ func (h *StudyHandler) ReviewWord(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, review)
+}
+
+func (h *StudyHandler) GetActivityStudySessions(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"items": []gin.H{},
+		"pagination": gin.H{
+			"current_page":   1,
+			"total_pages":    0,
+			"total_items":    0,
+			"items_per_page": 100,
+		},
+	})
+}
+
+func (h *StudyHandler) CreateStudyActivity(c *gin.Context) {
+	var req struct {
+		Name         string `json:"name" binding:"required"`
+		Description  string `json:"description"`
+		ThumbnailURL string `json:"thumbnail_url"`
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"id":            1,
+		"name":          req.Name,
+		"description":   req.Description,
+		"thumbnail_url": req.ThumbnailURL,
+	})
+}
+
+func (h *StudyHandler) GetStudySessions(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"items": []gin.H{},
+		"pagination": gin.H{
+			"current_page":   1,
+			"total_pages":    0,
+			"total_items":    0,
+			"items_per_page": 100,
+		},
+	})
+}
+
+func (h *StudyHandler) GetStudySession(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid session ID"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"id": id})
+}
+
+func (h *StudyHandler) GetStudySessionWords(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"items": []gin.H{},
+		"pagination": gin.H{
+			"current_page":   1,
+			"total_pages":    0,
+			"total_items":    0,
+			"items_per_page": 100,
+		},
+	})
 } 

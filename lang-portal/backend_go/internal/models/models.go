@@ -11,10 +11,10 @@ import (
 
 // WordParts represents the different forms of a Greek word
 type WordParts struct {
-	Present string `json:"present,omitempty"`
-	Future  string `json:"future,omitempty"`
-	Aorist  string `json:"aorist,omitempty"`
-	Perfect string `json:"perfect,omitempty"`
+	Present string `json:"present"`
+	Future  string `json:"future"`
+	Aorist  string `json:"aorist"`
+	Perfect string `json:"perfect"`
 }
 
 // Implement sql.Scanner interface for WordParts
@@ -34,10 +34,39 @@ func (wp WordParts) Value() (driver.Value, error) {
 // Base Models
 type Word struct {
 	gorm.Model
-	AncientGreek string  `json:"ancient_greek" gorm:"not null"`
-	Greek        string  `json:"greek" gorm:"not null"`
-	English      string  `json:"english" gorm:"not null"`
-	Groups       []Group `json:"groups" gorm:"many2many:words_groups;"`
+	AncientGreek string            `json:"ancient_greek" gorm:"not null"`
+	Greek        string            `json:"greek" gorm:"not null"`
+	English      string            `json:"english" gorm:"not null"`
+	Parts        WordParts         `json:"parts" gorm:"type:json"`
+	Groups       []Group           `json:"groups" gorm:"many2many:words_groups;"`
+}
+
+// Add custom JSON marshaling
+func (w Word) MarshalJSON() ([]byte, error) {
+	type Alias Word
+	return json.Marshal(struct {
+		ID           uint              `json:"id"`
+		AncientGreek string            `json:"ancient_greek"`
+		Greek        string            `json:"greek"`
+		English      string            `json:"english"`
+		Parts        WordParts         `json:"parts"`
+		Groups       []GroupWithStats  `json:"groups"`
+		Stats        struct {
+			CorrectCount int `json:"correct_count"`
+			WrongCount   int `json:"wrong_count"`
+		} `json:"stats"`
+	}{
+		ID:           w.ID,
+		AncientGreek: w.AncientGreek,
+		Greek:        w.Greek,
+		English:      w.English,
+		Parts:        w.Parts,
+		Groups:       []GroupWithStats{}, // TODO: Convert groups
+		Stats: struct {
+			CorrectCount int `json:"correct_count"`
+			WrongCount   int `json:"wrong_count"`
+		}{},
+	})
 }
 
 type Group struct {
@@ -80,12 +109,31 @@ type Pagination struct {
 }
 
 type WordWithStats struct {
-	ID           uint   `json:"id"`
-	AncientGreek string `json:"ancient_greek"`
-	Greek        string `json:"greek"`
-	English      string `json:"english"`
-	CorrectCount int    `json:"correct_count"`
-	WrongCount   int    `json:"wrong_count"`
+	ID           uint              `json:"id"`
+	AncientGreek string            `json:"ancient_greek"`
+	Greek        string            `json:"greek"`
+	English      string            `json:"english"`
+	Parts        WordParts         `json:"parts"`
+	CorrectCount int               `json:"correct_count"`
+	WrongCount   int               `json:"wrong_count"`
+}
+
+// Add a constructor to convert Word to WordWithStats
+func NewWordWithStats(w *Word) *WordWithStats {
+	return &WordWithStats{
+		ID:           w.ID,
+		AncientGreek: w.AncientGreek,
+		Greek:        w.Greek,
+		English:      w.English,
+		Parts: WordParts{
+			Present: "",
+			Future:  "",
+			Aorist:  "",
+			Perfect: "",
+		},
+		CorrectCount: 0, // TODO: Calculate from word reviews
+		WrongCount:   0,
+	}
 }
 
 type WordDetailResponse struct {
@@ -152,22 +200,18 @@ type StudyActivitiesResponse struct {
 	Pagination *Pagination     `json:"pagination"`
 }
 
+type StudySessionsResponse struct {
+	Items      []StudySession `json:"items"`
+	Pagination *Pagination    `json:"pagination"`
+}
+
 // Database connection
 var DB *gorm.DB
 
 func InitDB(dbPath string) error {
 	var err error
-	DB, err = gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-
-	// Auto migrate the schema
-	return DB.AutoMigrate(
-		&Word{},
-		&Group{},
-		&StudyActivity{},
-		&StudySession{},
-		&WordReview{},
-	)
+	DB, err = gorm.Open(sqlite.Open(dbPath), &gorm.Config{
+		DisableForeignKeyConstraintWhenMigrating: true,
+	})
+	return err
 }

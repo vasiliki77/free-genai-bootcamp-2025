@@ -7,6 +7,7 @@
   - [Frontend and Backend Technical Specs](#frontend-and-backend-technical-specs)
   - [Resolving Backend Startup Issues and API Response Validation](#resolving-backend-startup-issues-and-api-response-validation)
   - [Exploring Testing Strategies: Go Unit Tests vs. Ruby/RSpec Integration Tests](#exploring-testing-strategies-go-unit-tests-vs-rubyrspec-integration-tests)
+  - [Summary of Work on branch reimplementing\_backend](#summary-of-work-on-branch-reimplementing_backend)
 
 > 2025-02-11
 
@@ -95,3 +96,31 @@ Unsure about which method to follow, I asked cursor chat and it gave me the foll
 > Keep your `*_test.go` files! They are valuable for testing the internal logic of your Go backend. Use Ruby/RSpec tests **in addition** to your Go tests to provide endpoint/system-level testing and ensure your API behaves as expected from an external client's perspective.  This combination will give you a more robust and well-tested application.
 > 
 > If you were to *only* choose one type of testing (which is not recommended), for a Go backend project, it would generally be more efficient and maintainable to primarily rely on Go's testing tools for most of your testing needs, and use Ruby/RSpec (or similar tools) for specific higher-level end-to-end or API contract verification tests if needed. But ideally, use both for a more complete testing strategy.
+
+> 2025-02-14
+
+## Summary of Work on branch reimplementing_backend
+
+1. **Fixed Database Migration Issues**
+- Simplified the SQLite foreign key constraints in the schema
+- Disabled GORM's auto-migration to prevent conflicts with our manual schema
+- Fixed issues with the words_groups join table
+
+2. **Implemented Word Response Format**
+- Created proper JSON response structures for word endpoints
+- Added `WordWithStats` struct for list responses
+- Added `WordResponse` struct for single word details
+- Implemented custom JSON marshaling to match API spec
+
+3. **Fixed Data Formatting**
+- Moved stats (correct_count, wrong_count) to top level of response
+- Ensured Parts field always includes all verb forms (present, future, aorist, perfect)
+- Removed omitempty tags to ensure all fields are present in JSON
+- Initialized empty strings for verb parts instead of null values
+
+4. **Code Organization**
+- Separated response types from database models
+- Added constructor method `NewWordWithStats` for converting database models to response format
+- Updated both list and detail endpoints to use the new response formats
+
+The main challenge was getting the JSON response format to exactly match the API specification, particularly with nested fields like `parts` and handling of statistics. I also had to deal with some SQLite-specific database migration issues.

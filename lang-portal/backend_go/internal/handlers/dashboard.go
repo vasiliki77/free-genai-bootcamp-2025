@@ -19,6 +19,10 @@ func NewDashboardHandler(s *service.DashboardService) *DashboardHandler {
 func (h *DashboardHandler) GetLastStudySession(c *gin.Context) {
 	session, err := h.service.GetLastStudySession()
 	if err != nil {
+		if err.Error() == "no study sessions found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "No study sessions found"})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

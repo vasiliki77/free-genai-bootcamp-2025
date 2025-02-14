@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"os/exec"
 
 	"backend_go/internal/db"
 	"backend_go/internal/models"
@@ -122,4 +123,24 @@ func Seed() error {
 	}
 
 	return nil
+}
+
+// InitDB initializes the database with schema
+func InitDB() error {
+	dbPath := os.Getenv("DB_PATH")
+	if dbPath == "" {
+		dbPath = "words.db" // default to production db
+	}
+	return models.InitDB(dbPath)
+}
+
+// InitTestDB initializes the test database with test data
+func InitTestDB() error {
+	if err := models.InitDB("words.test.db"); err != nil {
+		return err
+	}
+	
+	// Import test data
+	cmd := exec.Command("sqlite3", "words.test.db", ".read db/seeds/test_data.sql")
+	return cmd.Run()
 }

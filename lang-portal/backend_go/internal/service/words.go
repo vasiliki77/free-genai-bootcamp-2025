@@ -2,6 +2,7 @@ package service
 
 import (
 	"backend_go/internal/models"
+	"errors"
 )
 
 type WordService struct {
@@ -11,14 +12,8 @@ func (s *WordService) GetWords(page, perPage int) (*models.WordsResponse, error)
 	var words []models.Word
 	var total int64
 
-	offset := (page - 1) * perPage
-
 	models.DB.Model(&models.Word{}).Count(&total)
-	result := models.DB.
-		Limit(perPage).
-		Offset(offset).
-		Find(&words)
-
+	result := models.DB.Limit(perPage).Offset((page - 1) * perPage).Find(&words)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -26,85 +21,79 @@ func (s *WordService) GetWords(page, perPage int) (*models.WordsResponse, error)
 	// Convert to WordWithStats
 	wordStats := make([]models.WordWithStats, len(words))
 	for i, word := range words {
-		var correct, wrong int64
-		models.DB.Model(&models.WordReview{}).
-			Where("word_id = ? AND correct = ?", word.ID, true).
-			Count(&correct)
-		models.DB.Model(&models.WordReview{}).
-			Where("word_id = ? AND correct = ?", word.ID, false).
-			Count(&wrong)
-
-		wordStats[i] = models.WordWithStats{
-			ID:           word.ID,
-			AncientGreek: word.AncientGreek,
-			Greek:        word.Greek,
-			English:      word.English,
-			CorrectCount: int(correct),
-			WrongCount:   int(wrong),
-		}
+		stats := models.NewWordWithStats(&word)
+		wordStats[i] = *stats
 	}
-
-	totalPages := (int(total) + perPage - 1) / perPage
 
 	return &models.WordsResponse{
 		Items: wordStats,
 		Pagination: &models.Pagination{
 			CurrentPage:  page,
-			TotalPages:   totalPages,
+			TotalPages:   (int(total) + perPage - 1) / perPage,
 			TotalItems:   int(total),
 			ItemsPerPage: perPage,
 		},
 	}, nil
 }
 
-func (s *WordService) GetWord(id uint) (*models.WordDetailResponse, error) {
-	var word models.Word
-	result := models.DB.
-		Preload("Groups").
-		First(&word, id)
+type WordResponse struct {
+	ID           uint              `json:"id"`
+	AncientGreek string            `json:"ancient_greek"`
+	Greek        string            `json:"greek"`
+	English      string            `json:"english"`
+	Parts        map[string]string `json:"parts"`
+	Stats        struct {
+		CorrectCount int `json:"correct_count"`
+		WrongCount   int `json:"wrong_count"`
+	} `json:"stats"`
+	Groups []struct {
+		ID   uint   `json:"id"`
+		Name string `json:"name"`
+	} `json:"groups"`
+}
 
+func (s *WordService) GetWord(id uint) (*WordResponse, error) {
+	var word models.Word
+	result := models.DB.Preload("Groups").First(&word, id)
 	if result.Error != nil {
+		if result.RowsAffected == 0 {
+			return nil, errors.New("word not found")
+		}
 		return nil, result.Error
 	}
 
-	var correct, wrong int64
-	models.DB.Model(&models.WordReview{}).
-		Where("word_id = ? AND correct = ?", word.ID, true).
-		Count(&correct)
-	models.DB.Model(&models.WordReview{}).
-		Where("word_id = ? AND correct = ?", word.ID, false).
-		Count(&wrong)
-
-	groups := make([]models.GroupWithStats, len(word.Groups))
-	for i, group := range word.Groups {
-		var wordCount int64
-		wordCount = models.DB.Model(&group).Association("Words").Count()
-
-		groups[i] = models.GroupWithStats{
-			ID:   group.ID,
-			Name: group.Name,
-			Stats: struct {
-				TotalWordCount int `json:"total_word_count,omitempty"`
-			}{
-				TotalWordCount: int(wordCount),
-			},
-		}
-	}
-
-	return &models.WordDetailResponse{
+	// Convert to response format
+	response := &WordResponse{
 		ID:           word.ID,
 		AncientGreek: word.AncientGreek,
 		Greek:        word.Greek,
 		English:      word.English,
+		Parts: map[string]string{
+			"present": word.Parts.Present,
+			"future":  word.Parts.Future,
+			"aorist":  word.Parts.Aorist,
+			"perfect": word.Parts.Perfect,
+		},
 		Stats: struct {
 			CorrectCount int `json:"correct_count"`
 			WrongCount   int `json:"wrong_count"`
 		}{
-			CorrectCount: int(correct),
-			WrongCount:   int(wrong),
+			CorrectCount: 0, // TODO: Calculate from reviews
+			WrongCount:   0,
 		},
-		Groups: groups,
-	}, nil
+	}
+
+	// Convert groups
+	response.Groups = make([]struct {
+		ID   uint   `json:"id"`
+		Name string `json:"name"`
+	}, len(word.Groups))
+	for i, g := range word.Groups {
+		response.Groups[i].ID = g.ID
+		response.Groups[i].Name = g.Name
+	}
+
+	return response, nil
 }
 
 func NewWordService() *WordService {
