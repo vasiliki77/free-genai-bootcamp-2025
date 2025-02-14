@@ -3,45 +3,41 @@ package handlers
 import (
 	"net/http"
 
+	"backend_go/internal/service"
+
 	"github.com/gin-gonic/gin"
-	"github.com/lang-portal/backend_go/internal/service"
 )
 
-// DashboardHandler holds the service for dashboard related operations.
 type DashboardHandler struct {
-	dashboardService *service.DashboardService
+	service *service.DashboardService
 }
 
-// NewDashboardHandler creates a new DashboardHandler.
-func NewDashboardHandler(dashboardService *service.DashboardService) *DashboardHandler {
-	return &DashboardHandler{dashboardService: dashboardService}
+func NewDashboardHandler(s *service.DashboardService) *DashboardHandler {
+	return &DashboardHandler{service: s}
 }
 
-// GetLastStudySessionHandler handles the GET /api/dashboard/last_study_session endpoint.
-func (h *DashboardHandler) GetLastStudySessionHandler(c *gin.Context) {
-	session, err := h.dashboardService.GetLastStudySession()
+func (h *DashboardHandler) GetLastStudySession(c *gin.Context) {
+	session, err := h.service.GetLastStudySession()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get last study session"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, session)
 }
 
-// GetStudyProgressHandler handles the GET /api/dashboard/study_progress endpoint.
-func (h *DashboardHandler) GetStudyProgressHandler(c *gin.Context) {
-	progress, err := h.dashboardService.GetStudyProgress()
+func (h *DashboardHandler) GetStudyProgress(c *gin.Context) {
+	progress, err := h.service.GetStudyProgress()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get study progress"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, progress)
 }
 
-// GetQuickStatsHandler handles the GET /api/dashboard/quick-stats endpoint.
-func (h *DashboardHandler) GetQuickStatsHandler(c *gin.Context) {
-	stats, err := h.dashboardService.GetQuickStats()
+func (h *DashboardHandler) GetQuickStats(c *gin.Context) {
+	stats, err := h.service.GetQuickStats()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get quick stats"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, stats)

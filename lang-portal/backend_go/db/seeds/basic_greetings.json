@@ -5,48 +5,13 @@
     "english": "Hello"
   },
   {
-    "ancient_greek": "Καλημέρα",
-    "greek": "Καλημέρα",
-    "english": "Good morning"
+    "ancient_greek": "Ἀσπάζομαι",
+    "greek": "Χαιρετώ",
+    "english": "Greetings"
   },
   {
-    "ancient_greek": "Καλό μεσημέρι",
-    "greek": "Καλό μεσημέρι",
-    "english": "Good afternoon"
-  },
-  {
-    "ancient_greek": "Καλό απόγευμα",
-    "greek": "Καλό απόγευμα",
-    "english": "Good evening"
-  },
-  {
-    "ancient_greek": "Καληνύκτα",
-    "greek": "Καληνύχτα",
-    "english": "Good night"
-  },
-  {
-    "ancient_greek": "Εὐχαριστῶ",
-    "greek": "Ευχαριστώ",
-    "english": "Thank you"
-  },
-  {
-    "ancient_greek": "Παρακαλῶ",
-    "greek": "Παρακαλώ",
-    "english": "Please"
-  },
-  {
-    "ancient_greek": "Συγγνώμη",
-    "greek": "Συγγνώμη",
-    "english": "Excuse me / Sorry"
-  },
-  {
-    "ancient_greek": "Ναί",
-    "greek": "Ναι",
-    "english": "Yes"
-  },
-  {
-    "ancient_greek": "Οὐ",
-    "greek": "Όχι",
-    "english": "No"
+    "ancient_greek": "Ὑγίαινε",
+    "greek": "Γειά σου",
+    "english": "Goodbye (lit. 'be healthy'"
   }
-]
+] 

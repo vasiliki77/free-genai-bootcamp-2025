@@ -1,55 +1,77 @@
 package models
 
 import (
-	"database/sql"
+	"database/sql/driver"
+	"encoding/json"
 	"time"
+
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
+// WordParts represents the different forms of a Greek word
+type WordParts struct {
+	Present string `json:"present,omitempty"`
+	Future  string `json:"future,omitempty"`
+	Aorist  string `json:"aorist,omitempty"`
+	Perfect string `json:"perfect,omitempty"`
+}
+
+// Implement sql.Scanner interface for WordParts
+func (wp *WordParts) Scan(value interface{}) error {
+	bytes, ok := value.([]byte)
+	if !ok {
+		return nil
+	}
+	return json.Unmarshal(bytes, wp)
+}
+
+// Implement driver.Valuer interface for WordParts
+func (wp WordParts) Value() (driver.Value, error) {
+	return json.Marshal(wp)
+}
+
 // Base Models
-
-// Word represents a vocabulary word.
 type Word struct {
-	ID           int               `json:"id"`
-	AncientGreek string            `json:"ancient_greek"`
-	Greek        string            `json:"greek"`
-	English      string            `json:"english"`
-	Parts        map[string]string `json:"parts"` // JSON map for word parts
+	gorm.Model
+	AncientGreek string  `json:"ancient_greek" gorm:"not null"`
+	Greek        string  `json:"greek" gorm:"not null"`
+	English      string  `json:"english" gorm:"not null"`
+	Groups       []Group `json:"groups" gorm:"many2many:words_groups;"`
 }
 
-// Group represents a thematic group of words.
 type Group struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+	gorm.Model
+	Name  string `json:"name" gorm:"not null;unique"`
+	Words []Word `json:"words" gorm:"many2many:words_groups;"`
 }
 
-// StudySession represents a study session.
 type StudySession struct {
-	ID            int       `json:"id"`
-	GroupID       int       `json:"group_id"`
-	CreatedAt     time.Time `json:"created_at"`
-	StudyActivity int       `json:"study_activity"` // Changed to StudyActivity, assuming it refers to StudyActivity ID
+	gorm.Model
+	GroupID         uint          `json:"group_id" gorm:"not null"`
+	Group           Group         `json:"group"`
+	StudyActivityID uint          `json:"study_activity_id" gorm:"not null"`
+	StudyActivity   StudyActivity `json:"study_activity"`
+	WordReviews     []WordReview  `json:"word_reviews"`
 }
 
-// StudyActivity represents a specific study activity.
 type StudyActivity struct {
-	ID           int    `json:"id"`
-	Name         string `json:"name"`
-	ThumbnailURL string `json:"thumbnail_url"`
+	gorm.Model
+	Name         string `json:"name" gorm:"not null"`
 	Description  string `json:"description"`
+	ThumbnailURL string `json:"thumbnail_url"`
 }
 
-// WordReviewItem represents a record of word practice.
-type WordReviewItem struct {
-	ID             int       `json:"id"`
-	WordID         int       `json:"word_id"`
-	StudySessionID int       `json:"study_session_id"`
-	Correct        bool      `json:"correct"`
-	CreatedAt      time.Time `json:"created_at"`
+type WordReview struct {
+	gorm.Model
+	WordID         uint         `json:"word_id" gorm:"not null"`
+	Word           Word         `json:"word"`
+	StudySessionID uint         `json:"study_session_id" gorm:"not null"`
+	StudySession   StudySession `json:"study_session"`
+	Correct        bool         `json:"correct" gorm:"not null"`
 }
 
 // Response Types
-
-// Pagination struct for paginated responses.
 type Pagination struct {
 	CurrentPage  int `json:"current_page"`
 	TotalPages   int `json:"total_pages"`
@@ -57,22 +79,20 @@ type Pagination struct {
 	ItemsPerPage int `json:"items_per_page"`
 }
 
-// WordWithStats represents a word with study statistics.
 type WordWithStats struct {
-	AncientGreek string `json:"ancient_greek"` // Changed to AncientGreek
+	ID           uint   `json:"id"`
+	AncientGreek string `json:"ancient_greek"`
 	Greek        string `json:"greek"`
 	English      string `json:"english"`
 	CorrectCount int    `json:"correct_count"`
 	WrongCount   int    `json:"wrong_count"`
 }
 
-// WordDetailResponse represents detailed information for a single word.
 type WordDetailResponse struct {
-	ID           int               `json:"id"`            // Added ID for consistency
-	AncientGreek string            `json:"ancient_greek"` // Changed to AncientGreek
-	Greek        string            `json:"greek"`
-	English      string            `json:"english"`
-	Parts        map[string]string `json:"parts"` // Added Parts
+	ID           uint   `json:"id"`
+	AncientGreek string `json:"ancient_greek"`
+	Greek        string `json:"greek"`
+	English      string `json:"english"`
 	Stats        struct {
 		CorrectCount int `json:"correct_count"`
 		WrongCount   int `json:"wrong_count"`
@@ -80,19 +100,16 @@ type WordDetailResponse struct {
 	Groups []GroupWithStats `json:"groups"`
 }
 
-// GroupWithStats represents a group with associated statistics.
 type GroupWithStats struct {
-	ID        int    `json:"id"`
-	Name      string `json:"name"`
-	WordCount int    `json:"word_count,omitempty"`
-	Stats     struct {
+	ID    uint   `json:"id"`
+	Name  string `json:"name"`
+	Stats struct {
 		TotalWordCount int `json:"total_word_count,omitempty"`
 	} `json:"stats,omitempty"`
 }
 
-// StudySessionResponse represents a study session for API responses.
 type StudySessionResponse struct {
-	ID               int       `json:"id"`
+	ID               uint      `json:"id"`
 	ActivityName     string    `json:"activity_name"`
 	GroupName        string    `json:"group_name"`
 	StartTime        time.Time `json:"start_time"`
@@ -100,30 +117,19 @@ type StudySessionResponse struct {
 	ReviewItemsCount int       `json:"review_items_count"`
 }
 
-// StudyActivitySessionResponse represents a study activity session for API responses.
-type StudyActivitySessionResponse struct {
-	ID              int       `json:"id"`
-	GroupID         int       `json:"group_id"`
-	CreatedAt       time.Time `json:"created_at"`
-	StudyActivityID int       `json:"study_activity_id"`
-}
-
-// LastStudySession represents data for the last study session.
-type LastStudySession struct {
-	ID              int       `json:"id"`
-	GroupID         int       `json:"group_id"`
-	CreatedAt       time.Time `json:"created_at"`
-	StudyActivityID int       `json:"study_activity_id"`
+type LastStudySessionResponse struct {
+	ID              uint      `json:"id"`
+	GroupID         uint      `json:"group_id"`
 	GroupName       string    `json:"group_name"`
+	StudyActivityID uint      `json:"study_activity_id"`
+	CreatedAt       time.Time `json:"created_at"`
 }
 
-// StudyProgressResponse represents study progress statistics for dashboard.
 type StudyProgressResponse struct {
 	TotalWordsStudied   int `json:"total_words_studied"`
 	TotalAvailableWords int `json:"total_available_words"`
 }
 
-// QuickStatsResponse represents quick statistics for dashboard.
 type QuickStatsResponse struct {
 	SuccessRate        float64 `json:"success_rate"`
 	TotalStudySessions int     `json:"total_study_sessions"`
@@ -131,31 +137,37 @@ type QuickStatsResponse struct {
 	StudyStreakDays    int     `json:"study_streak_days"`
 }
 
-// WordsResponse is a container for a list of words and pagination info.
 type WordsResponse struct {
 	Items      []WordWithStats `json:"items"`
 	Pagination *Pagination     `json:"pagination"`
 }
 
-// GroupsResponse is a container for a list of groups and pagination info.
 type GroupsResponse struct {
 	Items      []GroupWithStats `json:"items"`
 	Pagination *Pagination      `json:"pagination"`
 }
 
-// DB struct to hold the database connection.
-type DB struct {
-	*sql.DB
+type StudyActivitiesResponse struct {
+	Items      []StudyActivity `json:"items"`
+	Pagination *Pagination     `json:"pagination"`
 }
 
-// NewDB creates a new database connection.
-func NewDB(dataSourceName string) (*DB, error) {
-	db, err := sql.Open("sqlite3", dataSourceName)
+// Database connection
+var DB *gorm.DB
+
+func InitDB(dbPath string) error {
+	var err error
+	DB, err = gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		return err
 	}
-	if err = db.Ping(); err != nil {
-		return nil, err
-	}
-	return &DB{db}, nil
+
+	// Auto migrate the schema
+	return DB.AutoMigrate(
+		&Word{},
+		&Group{},
+		&StudyActivity{},
+		&StudySession{},
+		&WordReview{},
+	)
 }
