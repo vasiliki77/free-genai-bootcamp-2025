@@ -1,79 +1,146 @@
 //go:build mage
+
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
-	_ "github.com/mattn/go-sqlite3"
+	"os/exec"
+
+	"backend_go/internal/db"
+	"backend_go/internal/models"
 )
 
-// Dev starts the development server
-func Dev() error {
-	env := os.Environ()
-	env = append(env, "GO111MODULE=on")
-	fmt.Println("Starting server...")
-	cmd := exec.Command("go", "run", "cmd/server/main.go")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Env = env
-	return cmd.Run()
-	  }
+const (
+	dbPath     = "words.db"
+	migrations = "db/migrations"
+)
 
-// InitDB initializes the SQLite database
-func InitDB() error {
-	dbPath := "words.db"
-	
-	// Remove existing database if it exists
-	if _, err := os.Stat(dbPath); err == nil {
-		if err := os.Remove(dbPath); err != nil {
-			return fmt.Errorf("failed to remove existing database: %v", err)
-		}
+// Init initializes the database
+func Init() error {
+	fmt.Println("Initializing database...")
+
+	// Create db directory if it doesn't exist
+	if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
+		return fmt.Errorf("failed to create db directory: %w", err)
 	}
 
-	// Create new database
-	db, err := sql.Open("sqlite3", dbPath)
-	if err != nil {
-		return fmt.Errorf("failed to create database: %v", err)
-	}
-	defer db.Close()
-
-	// Read and execute migration
-	migration, err := os.ReadFile(filepath.Join("db", "migrations", "0001_init.sql"))
-	if err != nil {
-		return fmt.Errorf("failed to read migration file: %v", err)
+	// Initialize database connection
+	if err := models.InitDB(dbPath); err != nil {
+		return fmt.Errorf("failed to initialize database: %w", err)
 	}
 
-	if _, err := db.Exec(string(migration)); err != nil {
-		return fmt.Errorf("failed to execute migration: %v", err)
-	}
-
-	fmt.Println("Database initialized successfully")
 	return nil
 }
 
 // Migrate runs database migrations
 func Migrate() error {
-	// TODO: Implement database migrations
-	return nil
-}
+	fmt.Println("Running migrations...")
 
-// Seed imports initial data into the database
-func Seed() error {
-	// TODO: Implement database seeding
+	if err := models.InitDB(dbPath); err != nil {
+		return fmt.Errorf("failed to initialize database: %w", err)
+	}
+
+	manager := db.NewMigrationManager(migrations)
+	if err := manager.RunMigrations(); err != nil {
+		return fmt.Errorf("failed to run migrations: %w", err)
+	}
+
 	return nil
 }
 
 // Reset clears all data and reinitializes the database
 func Reset() error {
-	// TODO: Implement full reset
+	fmt.Println("Resetting database...")
+
+	// Remove existing database
+	if err := os.Remove(dbPath); err != nil && !os.IsNotExist(err) {
+		return fmt.Errorf("failed to remove database: %w", err)
+	}
+
+	// Initialize new database
+	if err := Init(); err != nil {
+		return err
+	}
+
+	// Run migrations
+	if err := Migrate(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-// ResetHistory clears only study history
+// ResetHistory clears only study history while preserving vocabulary and groups
 func ResetHistory() error {
-	// TODO: Implement history reset
+	fmt.Println("Resetting study history...")
+
+	if err := models.InitDB(dbPath); err != nil {
+		return fmt.Errorf("failed to initialize database: %w", err)
+	}
+
+	// Delete all study related records
+	if err := models.DB.Exec("DELETE FROM word_review_items").Error; err != nil {
+		return fmt.Errorf("failed to delete word reviews: %w", err)
+	}
+	if err := models.DB.Exec("DELETE FROM study_sessions").Error; err != nil {
+		return fmt.Errorf("failed to delete study sessions: %w", err)
+	}
+
 	return nil
-} 
+}
+
+// Dev starts the development server
+func Dev() error {
+	fmt.Println("Starting development server...")
+	// TODO: Implement development server startup
+	return nil
+}
+
+// Seed imports seed data
+func Seed() error {
+	fmt.Println("Seeding database...")
+
+	if err := models.InitDB(dbPath); err != nil {
+		return fmt.Errorf("failed to initialize database: %w", err)
+	}
+
+	manager := db.NewSeedManager("db/seeds")
+
+	// Define seed files and their corresponding groups
+	seeds := map[string]string{
+		"basic_greetings.json": "Basic Greetings",
+		"common_nouns.json":    "Common Nouns",
+		"basic_verbs.json":     "Basic Verbs",
+	}
+
+	for file, group := range seeds {
+		fmt.Printf("Loading %s into group %s...\n", file, group)
+		if err := manager.LoadSeedFile(file, group); err != nil {
+			return fmt.Errorf("failed to load seed file %s: %w", file, err)
+		}
+	}
+
+	return nil
+}
+
+// InitDB initializes the database with schema
+func InitDB() error {
+	dbPath := os.Getenv("DB_PATH")
+	if dbPath == "" {
+		dbPath = "words.db" // default to production db
+	}
+	return models.InitDB(dbPath)
+}
+
+// InitTestDB initializes the test database with test data
+func InitTestDB() error {
+	if err := models.InitDB("words.test.db"); err != nil {
+		return err
+	}
+	
+	// Import test data
+	cmd := exec.Command("sqlite3", "words.test.db", ".read db/seeds/test_data.sql")
+	return cmd.Run()
+}

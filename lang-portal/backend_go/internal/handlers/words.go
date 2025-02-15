@@ -1,48 +1,59 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
+	"backend_go/internal/service"
+
 	"github.com/gin-gonic/gin"
-	"github.com/lang-portal/backend_go/internal/service"
 )
 
-// WordHandler holds the service for word related operations.
 type WordHandler struct {
-	wordService *service.WordService
+	service *service.WordService
 }
 
-// NewWordHandler creates a new WordHandler.
-func NewWordHandler(wordService *service.WordService) *WordHandler {
-	return &WordHandler{wordService: wordService}
+func NewWordHandler(s *service.WordService) *WordHandler {
+	return &WordHandler{service: s}
 }
 
-// GetWordsHandler handles the GET /api/words endpoint.
-func (h *WordHandler) GetWordsHandler(c *gin.Context) {
-	// TODO: Implement pagination parameters from query
-	page := 1
-	pageSize := 100 // Default page size
-	words, err := h.wordService.ListWords(page, pageSize)
+func (h *WordHandler) GetWords(c *gin.Context) {
+	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
+	fmt.Printf("GetWords called with page: %v\n", page) // Debug
+	if err != nil || page < 1 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid page parameter"})
+		return
+	}
+
+	perPage, err := strconv.Atoi(c.DefaultQuery("per_page", "100"))
+	if err != nil || perPage < 1 || perPage > 100 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid per_page parameter"})
+		return
+	}
+
+	words, err := h.service.GetWords(page, perPage)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to list words"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, words)
 }
 
-// GetWordHandler handles the GET /api/words/:id endpoint.
-func (h *WordHandler) GetWordHandler(c *gin.Context) {
-	idStr := c.Param("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid word ID"})
+func (h *WordHandler) GetWord(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil || id < 1 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid word ID format"})
 		return
 	}
 
-	word, err := h.wordService.GetWord(id)
+	word, err := h.service.GetWord(uint(id))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get word"})
+		if err.Error() == "word not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Word not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, word)
