@@ -8,6 +8,7 @@
   - [Resolving Backend Startup Issues and API Response Validation](#resolving-backend-startup-issues-and-api-response-validation)
   - [Exploring Testing Strategies: Go Unit Tests vs. Ruby/RSpec Integration Tests](#exploring-testing-strategies-go-unit-tests-vs-rubyrspec-integration-tests)
   - [Summary of Work on branch reimplementing\_backend](#summary-of-work-on-branch-reimplementing_backend)
+  - [Summary of Work on endpoints using test database](#summary-of-work-on-endpoints-using-test-database)
 
 > 2025-02-11
 
@@ -124,3 +125,44 @@ Unsure about which method to follow, I asked cursor chat and it gave me the foll
 - Updated both list and detail endpoints to use the new response formats
 
 The main challenge was getting the JSON response format to exactly match the API specification, particularly with nested fields like `parts` and handling of statistics. I also had to deal with some SQLite-specific database migration issues.
+
+Next step is to run rspec for the rest of the endpoints without errors.
+
+
+> 2025-02-15
+
+## Summary of Work on endpoints using test database
+
+1. After fixing the words endpoints, we moved on to implementing study sessions and dashboard functionality:
+   - Added proper pagination for study sessions
+   - Implemented study session details endpoint
+   - Added word listing for study sessions
+   - Created dashboard endpoints for stats and last session
+
+2. We then added test data management to help with testing:
+   - Created a ResetHistory endpoint to clear study data
+   - Added ReloadTestData endpoint to restore test data
+   - Implemented proper error handling for these endpoints
+   - Fixed success rate calculation to return proper float values
+
+3. The commands we use are important for testing:
+```bash
+rm -f words.test.db        # Removes any existing test database
+./scripts/init_test_db.sh  # Creates fresh test database with schema
+DB_PATH=words.test.db go run cmd/server/main.go  # Runs server with test database
+```
+
+These commands ensure:
+- We start with a clean slate (rm -f)
+- The database schema is properly initialized (init_test_db.sh)
+- The server uses the test database instead of production (DB_PATH)
+
+This setup allows us to:
+- Run tests against a known state
+- Avoid affecting production data
+- Reset the database between test runs
+- Have consistent test data across all tests
+
+The key improvement was moving from hardcoded test data to a proper test database management system, making our tests more reliable and maintainable.
+
+There are no more failures in the test database.

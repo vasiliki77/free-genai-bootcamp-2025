@@ -91,6 +91,21 @@ type StudyActivity struct {
 	ThumbnailURL string `json:"thumbnail_url"`
 }
 
+// Add custom JSON marshaling
+func (sa StudyActivity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		ID           uint   `json:"id"`
+		Name         string `json:"name"`
+		Description  string `json:"description"`
+		ThumbnailURL string `json:"thumbnail_url"`
+	}{
+		ID:           sa.ID,
+		Name:         sa.Name,
+		Description:  sa.Description,
+		ThumbnailURL: sa.ThumbnailURL,
+	})
+}
+
 type WordReview struct {
 	gorm.Model
 	WordID         uint         `json:"word_id" gorm:"not null"`
@@ -149,11 +164,9 @@ type WordDetailResponse struct {
 }
 
 type GroupWithStats struct {
-	ID    uint   `json:"id"`
-	Name  string `json:"name"`
-	Stats struct {
-		TotalWordCount int `json:"total_word_count,omitempty"`
-	} `json:"stats,omitempty"`
+	ID        uint   `json:"id"`
+	Name      string `json:"name"`
+	WordCount int    `json:"word_count"`
 }
 
 type StudySessionResponse struct {
@@ -179,10 +192,10 @@ type StudyProgressResponse struct {
 }
 
 type QuickStatsResponse struct {
-	SuccessRate        float64 `json:"success_rate"`
-	TotalStudySessions int     `json:"total_study_sessions"`
-	TotalActiveGroups  int     `json:"total_active_groups"`
-	StudyStreakDays    int     `json:"study_streak_days"`
+	SuccessRate        json.Number `json:"success_rate"`
+	TotalStudySessions int         `json:"total_study_sessions"`
+	TotalActiveGroups  int         `json:"total_active_groups"`
+	StudyStreakDays    int         `json:"study_streak_days"`
 }
 
 type WordsResponse struct {
@@ -201,8 +214,15 @@ type StudyActivitiesResponse struct {
 }
 
 type StudySessionsResponse struct {
-	Items      []StudySession `json:"items"`
-	Pagination *Pagination    `json:"pagination"`
+	Items      []StudySessionWithStats `json:"items"`
+	Pagination *Pagination            `json:"pagination"`
+}
+
+type StudySessionWithStats struct {
+	ID              uint      `json:"id"`
+	GroupID         uint      `json:"group_id"`
+	CreatedAt       time.Time `json:"created_at"`
+	StudyActivityID uint      `json:"study_activity_id"`
 }
 
 // Database connection

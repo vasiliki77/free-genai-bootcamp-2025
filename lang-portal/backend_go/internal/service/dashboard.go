@@ -2,10 +2,10 @@ package service
 
 import (
 	"backend_go/internal/models"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type DashboardService struct {
@@ -25,36 +25,34 @@ type StudyProgressResponse struct {
 }
 
 type QuickStatsResponse struct {
-	SuccessRate        float64 `json:"success_rate"`
-	TotalStudySessions int     `json:"total_study_sessions"`
-	TotalActiveGroups  int     `json:"total_active_groups"`
-	StudyStreakDays    int     `json:"study_streak_days"`
+	SuccessRate        json.Number `json:"success_rate"`
+	TotalStudySessions int         `json:"total_study_sessions"`
+	TotalActiveGroups  int         `json:"total_active_groups"`
+	StudyStreakDays    int         `json:"study_streak_days"`
 }
 
-func (s *DashboardService) GetLastStudySession() (*LastStudySessionResponse, error) {
+func (s *DashboardService) GetLastStudySession() (*models.LastStudySessionResponse, error) {
 	var session models.StudySession
-	result := models.DB.Order("created_at desc").First(&session)
+	var group models.Group
 
-	// Check if no sessions exist
+	result := models.DB.Order("created_at DESC").First(&session)
 	if result.Error != nil {
-		if result.Error == gorm.ErrRecordNotFound {
+		if result.RowsAffected == 0 {
 			return nil, errors.New("no study sessions found")
 		}
 		return nil, result.Error
 	}
 
-	// Get group name
-	var group models.Group
 	if err := models.DB.First(&group, session.GroupID).Error; err != nil {
 		return nil, err
 	}
 
-	return &LastStudySessionResponse{
+	return &models.LastStudySessionResponse{
 		ID:              session.ID,
 		GroupID:         session.GroupID,
 		GroupName:       group.Name,
 		StudyActivityID: session.StudyActivityID,
-		CreatedAt:       session.CreatedAt.Format("2006-01-02T15:04:05Z"),
+		CreatedAt:       session.CreatedAt,
 	}, nil
 }
 
@@ -71,29 +69,34 @@ func (s *DashboardService) GetStudyProgress() (*StudyProgressResponse, error) {
 	}, nil
 }
 
-func (s *DashboardService) GetQuickStats() (*QuickStatsResponse, error) {
-	var totalSessions, totalGroups int64
-	var correctReviews, totalReviews int64
+func (s *DashboardService) GetQuickStats() (*models.QuickStatsResponse, error) {
+	var totalSessions int64
+	var totalGroups int64
+	var correctReviews int64
+	var totalReviews int64
 
+	// Count total study sessions
 	models.DB.Model(&models.StudySession{}).Count(&totalSessions)
-	models.DB.Model(&models.Group{}).Count(&totalGroups)
+
+	// Count active groups (groups with study sessions)
+	models.DB.Model(&models.Group{}).
+		Joins("JOIN study_sessions ON study_sessions.group_id = groups.id").
+		Distinct().Count(&totalGroups)
+
+	// Calculate success rate
 	models.DB.Model(&models.WordReview{}).Where("correct = ?", true).Count(&correctReviews)
 	models.DB.Model(&models.WordReview{}).Count(&totalReviews)
 
-	// Ensure success rate is calculated as float64
 	var successRate float64
 	if totalReviews > 0 {
-		successRate = (float64(correctReviews) / float64(totalReviews)) * 100.0
+		successRate = float64(correctReviews) / float64(totalReviews) * 100.0
 	}
 
-	// Calculate streak
-	streak := s.calculateStreak()
-
-	return &QuickStatsResponse{
-		SuccessRate:        successRate, // This will now be a float like 80.0
+	return &models.QuickStatsResponse{
+		SuccessRate:        json.Number(fmt.Sprintf("%.2f", successRate)),
 		TotalStudySessions: int(totalSessions),
 		TotalActiveGroups:  int(totalGroups),
-		StudyStreakDays:    streak,
+		StudyStreakDays:    s.calculateStreak(),
 	}, nil
 }
 

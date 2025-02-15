@@ -12,6 +12,12 @@ RSpec.configure do |config|
     end
   end
 
+  config.before(:each) do
+    # Reset and reload test data before each test
+    HTTParty.post('http://localhost:8080/api/reset_history')
+    HTTParty.post('http://localhost:8080/api/reload_test_data')
+  end
+
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end

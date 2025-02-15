@@ -20,7 +20,7 @@ RSpec.describe 'Dashboard API' do
     end
 
     it 'returns 404 when no sessions exist' do
-      # First reset history to ensure no sessions
+      # First, clear all study sessions
       HTTParty.post("#{base_url}/reset_history")
       
       response = HTTParty.get("#{base_url}/dashboard/last_study_session")

@@ -3,9 +3,30 @@ package service
 import (
 	"backend_go/internal/models"
 	"errors"
+	"time"
 )
 
 type GroupService struct{}
+
+type GroupWithStats struct {
+	ID        uint   `json:"id"`
+	Name      string `json:"name"`
+	WordCount int    `json:"word_count"`
+}
+
+type GroupResponse struct {
+	ID    uint `json:"id"`
+	Name  string `json:"name"`
+	Stats struct {
+		TotalWordCount int `json:"total_word_count"`
+	} `json:"stats"`
+}
+
+type StudySessionWithStats struct {
+	ID              uint      `json:"id"`
+	CreatedAt       time.Time `json:"created_at"`
+	StudyActivityID uint      `json:"study_activity_id"`
+}
 
 func (s *GroupService) GetGroups(page, perPage int) (*models.GroupsResponse, error) {
 	var groups []models.Group
@@ -20,9 +41,12 @@ func (s *GroupService) GetGroups(page, perPage int) (*models.GroupsResponse, err
 	// Convert to GroupWithStats
 	groupStats := make([]models.GroupWithStats, len(groups))
 	for i, group := range groups {
+		wordCount := models.DB.Model(&group).Association("Words").Count()
+		
 		groupStats[i] = models.GroupWithStats{
-			ID:   group.ID,
-			Name: group.Name,
+			ID:        group.ID,
+			Name:      group.Name,
+			WordCount: int(wordCount),
 		}
 	}
 
@@ -49,8 +73,18 @@ func (s *GroupService) GetGroupStudySessions(groupID uint, page, perPage int) (*
 		return nil, errors.New("group not found")
 	}
 
+	// Convert to StudySessionWithStats
+	sessionStats := make([]models.StudySessionWithStats, len(sessions))
+	for i, session := range sessions {
+		sessionStats[i] = models.StudySessionWithStats{
+			ID:              session.ID,
+			CreatedAt:       session.CreatedAt,
+			StudyActivityID: session.StudyActivityID,
+		}
+	}
+
 	return &models.StudySessionsResponse{
-		Items: sessions,
+		Items: sessionStats,
 		Pagination: &models.Pagination{
 			CurrentPage:  page,
 			TotalPages:   (int(total) + perPage - 1) / perPage,
@@ -96,7 +130,7 @@ func (s *GroupService) GetGroupWords(groupID uint, page, perPage int) (*models.W
 	}, nil
 }
 
-func (s *GroupService) GetGroup(id uint) (*models.Group, error) {
+func (s *GroupService) GetGroup(id uint) (*GroupResponse, error) {
 	var group models.Group
 	result := models.DB.First(&group, id)
 	if result.Error != nil {
@@ -105,7 +139,16 @@ func (s *GroupService) GetGroup(id uint) (*models.Group, error) {
 		}
 		return nil, result.Error
 	}
-	return &group, nil
+
+	wordCount := models.DB.Model(&group).Association("Words").Count()
+
+	response := &GroupResponse{
+		ID:   group.ID,
+		Name: group.Name,
+	}
+	response.Stats.TotalWordCount = int(wordCount)
+
+	return response, nil
 }
 
 func NewGroupService() *GroupService {
