@@ -9,3 +9,6 @@
 ## Prompting Guides
 
 https://platform.openai.com/docs/guides/prompt-engineering
+
+
+For more details please see [Choosing appropriate model](../../journal/week0.md#choosing-appropriate-model)

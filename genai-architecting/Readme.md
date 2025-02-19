@@ -26,3 +26,6 @@
 - **Performance:** Optimize response times for AI-generated study activities.
 - **Security:** Implement guardrails to ensure appropriate AI-generated content.
 - **Model Selection:** We're considering using Mistral AI because it’s ideal for text generation and interactive language learning activities. [Mistral AI on Hugging Face](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3) is instruction-tuned LLM focused on text generation, task completion, and conversational tasks.
+
+
+For more details please see [GenAI Architecting](../journal/week0.md#genai-architecting)
