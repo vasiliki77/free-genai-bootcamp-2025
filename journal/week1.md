@@ -1,15 +1,16 @@
 # Free GenAI Bootcamp 2025 - Week1
 
-## Table of Contents
 
 - [Free GenAI Bootcamp 2025 - Week1](#free-genai-bootcamp-2025---week1)
-  - [Table of Contents](#table-of-contents)
   - [Frontend and Backend Technical Specs](#frontend-and-backend-technical-specs)
   - [Resolving Backend Startup Issues and API Response Validation](#resolving-backend-startup-issues-and-api-response-validation)
   - [Exploring Testing Strategies: Go Unit Tests vs. Ruby/RSpec Integration Tests](#exploring-testing-strategies-go-unit-tests-vs-rubyrspec-integration-tests)
   - [Summary of Work on branch reimplementing\_backend](#summary-of-work-on-branch-reimplementing_backend)
   - [Summary of Work on endpoints using test database](#summary-of-work-on-endpoints-using-test-database)
   - [Technical Specs Analysis \& Frontend Implementation](#technical-specs-analysis--frontend-implementation)
+  - [Installing openvino on my Intel AI PC](#installing-openvino-on-my-intel-ai-pc)
+  - [LLM Deployment Session Summary](#llm-deployment-session-summary)
+
 
 > 2025-02-11
 
@@ -201,3 +202,59 @@ Next Steps:
 - Implement pagination for lists
 - Add breadcrumb navigation 
 - Set up dark mode toggle
+
+
+> 2025-02-17
+
+## Installing openvino on my Intel AI PC
+
+https://docs.openvino.ai/2025/get-started/install-openvino/install-openvino-pip.html
+In powershell:
+```bash
+python -m venv openvino_env
+openvino_env\Scripts\activate
+(openvino_env) PS C:\Users\xxxxx> python -m pip install --upgrade pip
+
+(openvino_env) PS C:\Users\xxxxx> python -m pip install openvino
+
+(openvino_env) PS C:\Users\xxxxx> python -c "from openvino import Core; print(Core().available_devices)"
+ZE_LOADER_DEBUG_TRACE:Using Loader Library Path:
+ZE_LOADER_DEBUG_TRACE:Tracing Layer Library Path: ze_tracing_layer.dll
+['CPU', 'GPU', 'NPU']
+```
+
+> 2025-02-17
+
+## LLM Deployment Session Summary
+
+For detailed steps see the following file:
+- [OPEA Components summary](../opea-comps/vllm/README.md)
+
+
+**Goal**
+Deploy **Mistral-7B-Instruct-v0.3** using **vLLM** with **Intel Arc GPU acceleration** in **WSL2**.
+
+**Challenges**
+- **WSL2 GPU passthrough for Intel Arc** isn’t straightforward.
+- OpenVINO GPU support requires specific setup.
+- **vLLM** and **OpenVINO** version compatibility issues.
+
+**Issues Encountered**
+- **[GPU] Can't get PERFORMANCE_HINT**: Error related to missing GPU configuration or drivers.
+- **OpenVINO GPU support** in container environment needed special setup.
+
+**Possible Solutions**
+- **CPU-Only Deployment**: Works immediately, simpler setup, but slower inference.
+- **Native Windows Deployment**: Allows direct access to the Intel Arc GPU, but requires different setup.
+- **Alternative Frameworks**: Explore **Intel’s optimized transformers** or **PyTorch with Intel extensions**.
+
+**Next Steps**
+1. Short-term: Deploy with **CPU-only** version for testing.
+2. Long-term: Either **set up native Windows** environment for GPU acceleration or implement with **Intel’s optimized frameworks**.
+
+
+**References**
+- [vLLM Documentation](https://github.com/vllm-project/vllm)
+- [OpenVINO GPU Support](https://docs.openvino.ai/latest/openvino_docs_install_guides_installing_openvino_docker.html)
+- [Intel Arc GPU Setup](https://www.intel.com/content/www/us/en/developer/articles/guide/getting-started-with-intel-oneapi-base-toolkit-in-wsl-2.html) 
+
