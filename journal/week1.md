@@ -10,6 +10,7 @@
   - [Technical Specs Analysis \& Frontend Implementation](#technical-specs-analysis--frontend-implementation)
   - [Installing openvino on my Intel AI PC](#installing-openvino-on-my-intel-ai-pc)
   - [LLM Deployment Session Summary](#llm-deployment-session-summary)
+  - [Exploration of different models](#exploration-of-different-models)
 
 
 > 2025-02-11
@@ -223,7 +224,7 @@ ZE_LOADER_DEBUG_TRACE:Tracing Layer Library Path: ze_tracing_layer.dll
 ['CPU', 'GPU', 'NPU']
 ```
 
-> 2025-02-17
+> 2025-02-19
 
 ## LLM Deployment Session Summary
 
@@ -257,4 +258,27 @@ Deploy **Mistral-7B-Instruct-v0.3** using **vLLM** with **Intel Arc GPU accelera
 - [vLLM Documentation](https://github.com/vllm-project/vllm)
 - [OpenVINO GPU Support](https://docs.openvino.ai/latest/openvino_docs_install_guides_installing_openvino_docker.html)
 - [Intel Arc GPU Setup](https://www.intel.com/content/www/us/en/developer/articles/guide/getting-started-with-intel-oneapi-base-toolkit-in-wsl-2.html) 
+
+
+## Exploration of different models
+
+1. **Considered MarianMT Model**
+   - Found it's a specialized translation model
+   - Smaller (298MB) than Mistral
+   - Specifically designed for translation tasks
+
+2. **Explored OPEA Components**
+   - Looked at `/comps/third_parties`
+   - Considered TGI (Text Generation Inference)
+   - Found TGI only supports Xeon and Gaudi, not Intel NPU
+
+3. **Back to vLLM**
+   - Decided to try vLLM again since it has Intel hardware support
+   - Attempted to build the container using `Dockerfile.intel_gpu`
+   - Currently encountering BuildKit issues with Docker
+
+**Current Status:**
+- Trying to build vLLM with Intel GPU support
+- Getting BuildKit-related errors in Docker build
+- Need to resolve Docker build issues to proceed
 
