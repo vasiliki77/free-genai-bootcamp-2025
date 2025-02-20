@@ -1,16 +1,14 @@
-# Free GenAI Bootcamp 2025 - Week1
 
-
-- [Free GenAI Bootcamp 2025 - Week1](#free-genai-bootcamp-2025---week1)
-  - [Frontend and Backend Technical Specs](#frontend-and-backend-technical-specs)
-  - [Resolving Backend Startup Issues and API Response Validation](#resolving-backend-startup-issues-and-api-response-validation)
-  - [Exploring Testing Strategies: Go Unit Tests vs. Ruby/RSpec Integration Tests](#exploring-testing-strategies-go-unit-tests-vs-rubyrspec-integration-tests)
-  - [Summary of Work on branch reimplementing\_backend](#summary-of-work-on-branch-reimplementing_backend)
-  - [Summary of Work on endpoints using test database](#summary-of-work-on-endpoints-using-test-database)
-  - [Technical Specs Analysis \& Frontend Implementation](#technical-specs-analysis--frontend-implementation)
-  - [Installing openvino on my Intel AI PC](#installing-openvino-on-my-intel-ai-pc)
-  - [LLM Deployment Session Summary](#llm-deployment-session-summary)
-  - [Exploration of different models](#exploration-of-different-models)
+- [Frontend and Backend Technical Specs](#frontend-and-backend-technical-specs)
+- [Resolving Backend Startup Issues and API Response Validation](#resolving-backend-startup-issues-and-api-response-validation)
+- [Exploring Testing Strategies: Go Unit Tests vs. Ruby/RSpec Integration Tests](#exploring-testing-strategies-go-unit-tests-vs-rubyrspec-integration-tests)
+- [Summary of Work on branch reimplementing\_backend](#summary-of-work-on-branch-reimplementing_backend)
+- [Summary of Work on endpoints using test database](#summary-of-work-on-endpoints-using-test-database)
+- [Technical Specs Analysis \& Frontend Implementation](#technical-specs-analysis--frontend-implementation)
+- [Installing openvino on my Intel AI PC](#installing-openvino-on-my-intel-ai-pc)
+- [LLM Deployment Session Summary](#llm-deployment-session-summary)
+- [Exploration of different models](#exploration-of-different-models)
+- [Translation Mega Service Development](#translation-mega-service-development)
 
 
 > 2025-02-11
@@ -282,3 +280,119 @@ Deploy **Mistral-7B-Instruct-v0.3** using **vLLM** with **Intel Arc GPU accelera
 - Getting BuildKit-related errors in Docker build
 - Need to resolve Docker build issues to proceed
 
+
+
+## Translation Mega Service Development
+
+Created a FastAPI service that translates English to Ancient Greek using Mistral.
+
+**Setup and Development**
+
+1. Created project structure:
+```bash
+mkdir -p opea-comps/translation-mega-service
+cd opea-comps/translation-mega-service
+```
+
+2. Created requirements.txt [requirements.txt](../opea-comps/translation-mega-service/requirements.txt)
+
+
+3. Created Dockerfile [Dockerfile](../opea-comps/translation-mega-service/Dockerfile)
+
+
+4. Built and ran the service:
+```bash
+# Set Hugging Face token
+export HF_TOKEN="my_token"
+
+# Build image
+docker build -t translation-mega-service .
+
+# Run container
+docker run -d \
+    --name translation-mega-service \
+    -p 8000:8000 \
+    -e HF_TOKEN=${HF_TOKEN} \
+    --memory=8g \
+    --memory-swap=16g \
+    translation-mega-service
+
+# Check logs
+docker logs -f translation-mega-service
+```
+
+**Testing the Service**
+
+Multiple ways to test:
+
+1. Using curl:
+```bash
+curl -X POST http://localhost:8000/v1/translate \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Where is the dog? He needs to eat."}'
+```
+
+2. Using Python:
+```python
+import requests
+
+response = requests.post(
+    "http://localhost:8000/v1/translate",
+    json={"text": "Where is the dog? He needs to eat."}
+)
+print(response.json())
+```
+
+**Key Features**
+
+- Uses Mistral-7B-Instruct-v0.3 for translation
+- FastAPI for the web service
+- Docker containerization
+- Few-shot prompting for better translations
+- Optimized for CPU usage
+- Memory-efficient configuration
+
+**Challenges Solved**
+
+1. Model loading optimization:
+   - Used CPU-specific PyTorch
+   - Added memory limits
+   - Optimized token generation
+
+2. Translation improvements:
+   - Added few-shot examples
+   - Optimized prompt structure
+   - Added proper error handling
+
+3. Docker configuration:
+   - Security best practices
+   - Memory management
+   - Environment variable handling
+
+
+I tried to use other smaller models like TinyLlama-1.1B-Chat but the translation was not good.
+For every update:
+```
+# Stop and remove old container
+docker stop translation-mega-service
+docker rm translation-mega-service
+
+# Build with new name
+docker build -t translation-mega-service .
+
+# Run with new name and ensure HF_TOKEN is passed
+docker run -d \
+    --name translation-mega-service \
+    -p 8000:8000 \
+    -e HF_TOKEN=${HF_TOKEN} \
+    --memory=8g \
+    translation-mega-service
+
+
+docker logs -f translation-mega-service
+```
+
+**It works, but...**
+
+1. The container still takes too long to start.
+2. The model takes long to generate the translation.
