@@ -6,7 +6,7 @@
 > 2025-02-24
 ## Listening Learning App
 
-1. Extracted Ancient Greek Text from [Perseus Digital Library](https://en.wikipedia.org/wiki/Perseus_Digital_Library)
+1. Extracted Ancient Greek Text from [Perseus Digital Library](https://en.wikipedia.org/wiki/Perseus_Digital_Library) because there was no ancient transcription in YouTube.
 - Downloaded the XML file of Hommer Iliad book 1.
 - Converted the XML URL so it could be fetched programmatically.
 - Python script to download XML:
@@ -151,7 +151,7 @@ if response.status_code == 200:
 Although not perfect, the pronunciation is good enough for now.
 
 
-- Then created a script to randomly select and [transcribe words from the database](../listening-learning/transcribe_random_sequence.py) which also worked. 
+- Then created a script to randomly select and [transcribe words from the database](../listening-comp/transcribe_random_sequence.py) which also worked. 
 ```
 python transcribe_random_sequence.py 
 🔎 Getting random sequence from database...

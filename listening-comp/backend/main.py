@@ -43,21 +43,20 @@ def get_random_sequence():
         conn.close()
         
         if passage:
-            # Split into words and filter out empty strings
-            words = [word for word in passage[0].split() if word.strip()]
+            # Split passage into sentences by commas
+            sentences = [s.strip() for s in passage[0].split(',')]
+            # Filter for sentences with at least 5 words
+            valid_sentences = [s for s in sentences if len(s.split()) >= 5]
             
-            # Get a random starting point for 7-word sequence
-            if len(words) >= 7:
-                start_idx = random.randint(0, len(words) - 7)
-                selected_words = words[start_idx:start_idx + 7]
-                sequence = " ".join(selected_words)
+            if valid_sentences:
+                # Choose a random valid sentence
+                selected = random.choice(valid_sentences)
                 return jsonify({
-                    "text": sequence,
-                    "full_passage": passage[0],
-                    "sequence_position": f"Words {start_idx + 1}-{start_idx + 7} of {len(words)}"
+                    "text": selected,
+                    "full_passage": passage[0]
                 })
             else:
-                return jsonify({"error": "Passage too short"}), 400
+                return jsonify({"error": "No sentences with 5+ words found"}), 400
                 
         return jsonify({"error": "No passages found"}), 404
         

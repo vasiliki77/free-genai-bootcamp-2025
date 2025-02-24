@@ -32,4 +32,6 @@ python backend/main.py
 streamlit run frontend/main.py
 ```
 
+Here is a recording of how the app works:
 
+[App Recording](example_usage.mp4)

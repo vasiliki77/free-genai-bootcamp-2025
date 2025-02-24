@@ -18,34 +18,25 @@ if st.button("Get Random Greek Sequence"):
     if response.status_code == 200:
         data = response.json()
         st.session_state.current_text = data["text"]  # Store the text
-        
-        # Display the 7-word sequence
-        st.write("📜 Selected Sequence:")
-        st.write(data["text"])
-        
-        # Show position info
-        st.write("ℹ️ " + data["sequence_position"])
-        
-        # Option to show full passage
-        if st.checkbox("Show full passage"):
-            st.write("Full passage:")
-            st.write(data["full_passage"])
-    else:
-        st.error("Failed to get random sequence")
 
-# Separate Listen button
-if st.session_state.current_text and st.button("🔊 Listen"):
-    audio_response = requests.post(
-        f"{API_URL}/generate-audio",
-        json={"text": st.session_state.current_text}
-    )
-    if audio_response.status_code == 200:
-        st.audio(audio_response.content, format="audio/wav")
-    else:
-        st.error(f"Failed to generate audio: {audio_response.text}")
+# Always display the text if it exists
+if st.session_state.current_text:
+    st.write("📜 Selected Sequence:")
+    st.write(st.session_state.current_text)
+    
+    # Listen button
+    if st.button("🔊 Listen"):
+        audio_response = requests.post(
+            f"{API_URL}/generate-audio",
+            json={"text": st.session_state.current_text}
+        )
+        if audio_response.status_code == 200:
+            st.audio(audio_response.content, format="audio/wav")
+        else:
+            st.error(f"Failed to generate audio: {audio_response.text}")
 
 # Record user's pronunciation
-st.write("🎤 Record your pronunciation:")
+st.write("🎤 Record your pronunciation and compare it with the original:")
 audio_bytes = audio_recorder()
 if audio_bytes:
     st.audio(audio_bytes, format="audio/wav") 
