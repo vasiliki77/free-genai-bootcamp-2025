@@ -1,4 +1,6 @@
+## Table of Contents
 
+- [Table of Contents](#table-of-contents)
 - [Frontend and Backend Technical Specs](#frontend-and-backend-technical-specs)
 - [Resolving Backend Startup Issues and API Response Validation](#resolving-backend-startup-issues-and-api-response-validation)
 - [Exploring Testing Strategies: Go Unit Tests vs. Ruby/RSpec Integration Tests](#exploring-testing-strategies-go-unit-tests-vs-rubyrspec-integration-tests)
