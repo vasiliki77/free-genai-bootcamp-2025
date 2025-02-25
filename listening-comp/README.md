@@ -58,10 +58,10 @@ pip install -r requirements.txt
 
 4. Initialize the database:
 ```bash
-python backend/init_db.py
+python init_db.py
 ```
 
-5. Start the Flask backend (in a new terminal):
+5. Start the Flask backend:
 ```bash
 python backend/main.py
 ```
