@@ -1,5 +1,49 @@
+# Ancient Greek Learning App
 
-For additional context, read the [journal entry](../journal/week2.md).
+An interactive application for learning Ancient Greek with AI-powered question generation and audio features.
+
+## Setup Instructions
+
+### Prerequisites
+- [Anaconda](https://www.anaconda.com/download) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html)
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd listening-comp
+```
+
+1. Create the conda environment:
+```bash
+conda env create -f environment.yml
+```
+2. Activate the conda environment in all the terminals:
+```bash
+conda activate greek-learning
+```
+
+
+### Features
+
+- AI-powered question generation for:
+  - Reading comprehension
+  - Grammar
+  - Vocabulary
+- Interactive UI with immediate feedback
+- Audio support for Greek text
+
+
+>For additional context, read the [journal entry](../journal/week2.md).
+
+### Running the Application
+
+
+The application should now be running at:
+- Backend: http://localhost:5000
+- Frontend: http://localhost:8501
+- coquiTTS: http://localhost:5002/
 
 1. First, run the container with bash entrypoint:
 ```bash
@@ -31,7 +75,3 @@ python backend/main.py
 ```bash
 streamlit run frontend/main.py
 ```
-
-Here is a recording of how the app works:
-
-[App Recording](example_usage.mp4)

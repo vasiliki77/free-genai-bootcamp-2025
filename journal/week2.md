@@ -6,7 +6,7 @@
 > 2025-02-24
 ## Listening Learning App
 
-1. Extracted Ancient Greek Text from [Perseus Digital Library](https://en.wikipedia.org/wiki/Perseus_Digital_Library) because there was no ancient transcription in YouTube.
+1. Extracted Ancient Greek Text from [Perseus Digital Library](https://en.wikipedia.org/wiki/Perseus_Digital_Library) because there was no ancient Greek nor greek transcription in YouTube. 
 - Downloaded the XML file of Hommer Iliad book 1.
 - Converted the XML URL so it could be fetched programmatically.
 - Python script to download XML:
@@ -20,7 +20,7 @@
     response = requests.get(url)
 
     if response.status_code == 200:
-        with open("listening-learning/ancient_greek_text.xml", "wb") as f:
+        with open("listening-comp/ancient_greek_text.xml", "wb") as f:
             f.write(response.content)
         print("✅ Ancient Greek XML file downloaded successfully!")
     else:
@@ -29,23 +29,23 @@
 
 - Command to run the script:
     ```bash
-    python listening-learning/xml-download.py
+    python listening-comp/xml-download.py
     ```
 
 ---
 
 2. Created a New SQLite Database for Storage
-- Created a separate SQLite database inside `listening-learning/` instead of modifying `words.test.db`.
+- Created a separate SQLite database inside `listening-comp/` instead of modifying `words.test.db`.
 - Created SQLite database (`listening-learning.db`):
     ```bash
-    touch listening-learning/listening-learning.db
+    touch listening-comp/listening-learning.db
     ```
 - Created a table to store Ancient Greek text:
 
     ```python
     import sqlite3
 
-    conn = sqlite3.connect("listening-learning/listening-learning.db")
+    conn = sqlite3.connect("listening-comp/listening-learning.db")
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -66,7 +66,7 @@
     ```
 - Command to run the script:
     ```bash
-    python listening-learning/init_db.py
+    python listening-comp/init_db.py
     ```
 
 ---
@@ -79,8 +79,8 @@
     import sqlite3
     import xml.etree.ElementTree as ET
 
-    DB_PATH = "listening-learning/listening-learning.db"
-    XML_PATH = "listening-learning/ancient_greek_text.xml"
+    DB_PATH = "listening-comp/listening-learning.db"
+    XML_PATH = "listening-comp/ancient_greek_text.xml"
 
     def extract_greek_text(xml_file):
         tree = ET.parse(xml_file)
@@ -110,7 +110,7 @@
     ```
 - Command to run the script:
     ```bash
-    python listening-learning/parse_and_store.py
+    python listening-comp/parse_and_store.py
     ```
 
 ---
