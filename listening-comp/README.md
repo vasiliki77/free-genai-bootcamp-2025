@@ -40,11 +40,6 @@ conda activate greek-learning
 ### Running the Application
 
 
-The application should now be running at:
-- Backend: http://localhost:5000
-- Frontend: http://localhost:8501
-- coquiTTS: http://localhost:5002/
-
 1. First, run the container with bash entrypoint:
 ```bash
 docker run --rm -it -p 5002:5002 --entrypoint /bin/bash ghcr.io/coqui-ai/tts-cpu
@@ -75,3 +70,8 @@ python backend/main.py
 ```bash
 streamlit run frontend/main.py
 ```
+
+The application should now be running at:
+- Backend: http://localhost:5000
+- Frontend: http://localhost:8501
+- coquiTTS: http://localhost:5002/
