@@ -2,6 +2,7 @@
 
 - [Table of Contents](#table-of-contents)
 - [Listening Learning App](#listening-learning-app)
+- [Attempting question generation with Anthropic](#attempting-question-generation-with-anthropic)
 
 > 2025-02-24
 ## Listening Learning App
@@ -162,4 +163,28 @@ python transcribe_random_sequence.py
 🔊 Converting to speech...
 ✅ Audio saved as random_sequence.wav
 ```
+
+> 2025-02-25
+
+## Attempting question generation with Anthropic
+
+1. Initially, I tried to use Anthropic's Claude API to generate dynamic, contextual questions about Ancient Greek passages. The plan was to:
+   - Send Greek passages to Claude
+   - Have it generate intelligent comprehension questions
+   - Get back detailed translations and explanations
+
+2. I encountered two main issues:
+   - There was a `TypeError: 'Anthropic' object has no attribute 'messages'` due to API version mismatches
+   - I was unable to fix this and I could see it anthropic console that the key was not used at all.
+
+3. As a solution, I pivoted to a more sustainable approach:
+   - Created a built-in database of common Greek words and phrases
+   - Implemented three types of questions:
+     - Word meanings (e.g., "What does 'μῆνιν' mean?")
+     - Grammar forms (e.g., "What type of word is 'θεὰ'?")
+     - Phrase translations (e.g., "What does 'μῆνιν ἄειδε θεὰ' mean?")
+   - This approach ended up being more focused and reliable for language learning
+
+The current version doesn't require an API key and provides consistent, structured learning exercises similar to popular language learning apps.
+Of course it will need to be populated with more content. 
 
