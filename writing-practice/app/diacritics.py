@@ -13,7 +13,7 @@ st.divider()
 
 # Display the Greek Keyboard Layout
 st.subheader("Greek Keyboard Layout with Diacritic Marks")
-st.image("./img/polytonic_keyboard.png", caption="Greek Keyboard Layout", use_column_width=True)
+st.image("./img/polytonic_keyboard.png", caption="Greek Keyboard Layout", use_container_width=True)
 
 # Instructions
 st.markdown("""
