@@ -26,3 +26,10 @@ Open **System Settings** > **Keyboard** > **Input Sources**. Click **Add (+)**, 
 Go to **Settings** > **Keyboard** > **Input Sources**, click **+ (Add)**, search for **Greek (polytonic)**, and select it. Set it as default or switch using **Super (Windows key) + Space**.
 
 ## Running the app
+
+```bash
+cd writing-practice
+docker build -t writing-practice-app .
+docker run -p 8501:8501 writing-practice-app
+```
+
