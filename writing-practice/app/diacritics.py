@@ -24,8 +24,46 @@ st.markdown("""
 4. After typing, press Enter to check if you typed the correct diacritic mark.
 """)
 
-# Diacritic Mark Exercise
-diacritic_marks = ["ά", "ἄ", "ἆ", "ἇ", "ἐ", "ἡ", "ἰ", "ἱ", "ὀ", "ὑ", "ᾶ", "ῇ"]  # Examples of diacritic marks
+# Diacritic marks organized by type
+diacritic_marks = [
+    # Basic accents (acute, grave, circumflex)
+    'ά', 'ὰ', 'ᾶ',     # alpha
+    'έ', 'ὲ',          # epsilon
+    'ή', 'ὴ', 'ῆ',     # eta
+    'ί', 'ὶ', 'ῖ',     # iota
+    'ύ', 'ὺ', 'ῦ',     # upsilon
+    'ό', 'ὸ',          # omicron
+    'ώ', 'ὼ', 'ῶ',     # omega
+
+    # Breathing marks (smooth, rough)
+    'ἀ', 'ἁ',          # alpha
+    'ἐ', 'ἑ',          # epsilon
+    'ἠ', 'ἡ',          # eta
+    'ἰ', 'ἱ',          # iota
+    'ὐ', 'ὑ',          # upsilon
+    'ὀ', 'ὁ',          # omicron
+    'ὠ', 'ὡ',          # omega
+
+    # Breathing + accent combinations
+    'ἄ', 'ἅ', 'ἂ', 'ἃ', 'ἆ', 'ἇ',    # alpha
+    'ἔ', 'ἕ', 'ἒ', 'ἓ',               # epsilon
+    'ἤ', 'ἥ', 'ἢ', 'ἣ', 'ἦ', 'ἧ',    # eta
+    'ἴ', 'ἵ', 'ἲ', 'ἳ', 'ἶ', 'ἷ',    # iota
+    'ὔ', 'ὕ', 'ὒ', 'ὓ', 'ὖ', 'ὗ',    # upsilon
+    'ὄ', 'ὅ', 'ὂ', 'ὃ',               # omicron
+    'ὤ', 'ὥ', 'ὢ', 'ὣ', 'ὦ', 'ὧ',    # omega
+
+    # Iota subscript combinations (only for α, η, ω)
+    'ᾳ', 'ῃ', 'ῳ',                    # basic iota subscript
+    'ᾴ', 'ᾲ', 'ᾷ',                    # alpha + iota subscript + accents
+    'ῄ', 'ῂ', 'ῇ',                    # eta + iota subscript + accents
+    'ῴ', 'ῲ', 'ῷ',                    # omega + iota subscript + accents
+
+    # Iota subscript + breathing combinations
+    'ᾀ', 'ᾁ', 'ᾄ', 'ᾅ', 'ᾂ', 'ᾃ', 'ᾆ', 'ᾇ',    # alpha
+    'ᾐ', 'ᾑ', 'ᾔ', 'ᾕ', 'ᾒ', 'ᾓ', 'ᾖ', 'ᾗ',    # eta
+    'ᾠ', 'ᾡ', 'ᾤ', 'ᾥ', 'ᾢ', 'ᾣ', 'ᾦ', 'ᾧ'     # omega
+]
 
 # Choose a diacritic mark to practice
 diacritic_mark_to_practice = st.selectbox(
