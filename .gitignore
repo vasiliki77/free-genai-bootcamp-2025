@@ -1,1 +1,11 @@
 .DS_Store
+
+# Model data and cache
+data/
+**/data/
+
+# Logs
+tests/*.log
+
+# Environment variables
+.env

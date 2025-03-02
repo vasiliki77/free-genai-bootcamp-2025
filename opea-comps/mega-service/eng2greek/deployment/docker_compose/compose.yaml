@@ -1,0 +1,51 @@
+services:
+  tgi-server:
+    image: ghcr.io/huggingface/text-generation-inference:2.4.0-intel-cpu
+    container_name: tgi-server
+    ports:
+      - ${LLM_ENDPOINT_PORT:-11710}:80
+    volumes:
+      - "${DATA_PATH:-./data}:/data"
+      - text-generation-server-socket:/tmp
+    shm_size: 1g
+    environment:
+      HF_TOKEN: ${HUGGINGFACEHUB_API_TOKEN}
+      HUGGING_FACE_HUB_TOKEN: ${HUGGINGFACEHUB_API_TOKEN}
+      host_ip: ${ip_address}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    command: >
+      --model-id ${LLM_MODEL_ID}
+      --max-input-tokens ${MAX_INPUT_TOKENS}
+      --max-total-tokens ${MAX_TOTAL_TOKENS}
+      --huggingface-hub-cache /data
+
+  eng2greek:
+    build:
+      context: ../../
+      dockerfile: src/Dockerfile
+    image: opea/eng2greek:${TAG:-latest}
+    container_name: eng2greek-server
+    depends_on:
+      tgi-server:
+        condition: service_healthy
+    ports:
+      - "${TRANSLATION_PORT:-11700}:8080"
+    environment:
+      - llm_endpoint_url=http://tgi-server:80/generate
+    volumes:
+      - text-generation-server-socket:/tmp
+    restart: on-failure
+    command: ["tgi-server", "80", "/health", "600", "10", "uvicorn", "opea_translation_microservice:app", "--host", "0.0.0.0", "--port", "8080"]
+
+networks:
+  default:
+    name: translation_network
+    driver: bridge
+
+volumes:
+  text-generation-server-socket:

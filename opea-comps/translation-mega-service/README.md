@@ -4,7 +4,7 @@ A service for translating English to Ancient Greek.
 
 For detailed steps see the following entry in the journal:
 
-[Translation Mega Service Development](#translation-mega-service-development)
+[Translation Mega Service Development](../../journal/week1.md#translation-mega-service-development)
 ## Example Usage
 
 
