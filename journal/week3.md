@@ -14,6 +14,7 @@
   - [9. Tests and conclusion](#9-tests-and-conclusion)
 - [New approach](#new-approach)
 - [Conclusion](#conclusion)
+- [Agents](#agents)
 
 ## English to Ancient Greek Translation Microservice
 
@@ -328,3 +329,10 @@ It seems that the particular model, although lightweight compared to Mistral and
 My final thought is that, although I made the OPEA mega service work, I cannot use it for translation to ancient greek. 
 
 For a guide on how to build the mega service, please see the [README.md](../opea-comps/mega-service/README.md)
+
+> 05/03/2025
+
+## Agents
+
+Unfortunatelly there are no songs in ancient greek. I was able to find two but they are sand like hymns so it wouldn't be possible to extract words from [these songs](../song-vocab/Prompt.md). 
+Instead I focused on understanding more how to make use of Openvino and install [optimum_intel and notebooks on Windows](../openvino/README.md).
