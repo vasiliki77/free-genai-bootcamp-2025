@@ -1,4 +1,3 @@
-
 import { NavLink } from "react-router-dom";
 
 const NavBar = () => {
@@ -8,6 +7,7 @@ const NavBar = () => {
     { path: "/words", label: "Words" },
     { path: "/groups", label: "Word Groups" },
     { path: "/sessions", label: "Sessions" },
+    { path: "/translate", label: "Translation" },
     { path: "/settings", label: "Settings" },
   ];
 

@@ -9,6 +9,7 @@ import (
 	"backend_go/internal/service"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors" // Make sure to add this import
 )
 
 func main() {
@@ -24,6 +25,7 @@ func main() {
 	systemService := service.NewSystemService()
 	dashboardService := service.NewDashboardService()
 	studyService := service.NewStudyService()
+	translationService := service.NewTranslationService() // Add this line
 
 	// Initialize handlers
 	wordHandler := handlers.NewWordHandler(wordService)
@@ -31,9 +33,13 @@ func main() {
 	systemHandler := handlers.NewSystemHandler(systemService)
 	dashboardHandler := handlers.NewDashboardHandler(dashboardService)
 	studyHandler := handlers.NewStudyHandler(studyService)
+	translationHandler := handlers.NewTranslationHandler(translationService) // Add this line
 
 	// Setup router
 	router := gin.Default()
+	
+	// Add CORS middleware
+	router.Use(cors.Default())
 	api := router.Group("/api")
 
 	// Word routes
@@ -45,6 +51,9 @@ func main() {
 	api.GET("/groups/:id", groupHandler.GetGroup)
 	api.GET("/groups/:id/words", groupHandler.GetGroupWords)
 	api.GET("/groups/:id/study_sessions", groupHandler.GetGroupStudySessions)
+
+	// Add translation route
+	api.POST("/translate", translationHandler.TranslateText)
 
 	// Study routes
 	api.GET("/study_activities", studyHandler.GetStudyActivities)
@@ -69,6 +78,9 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Make sure you have the cors package installed:
+	// go get github.com/gin-contrib/cors
+	
 	if err := router.Run(":8080"); err != nil {
 		log.Fatal(err)
 	}
