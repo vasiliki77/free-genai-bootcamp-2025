@@ -110,7 +110,6 @@ curl -X POST "https://8080-01xxxxxxxxxxxxxxxxxxxxxxxx.cloudspaces.litng.ai/trans
 ## Deploy language portal on your local machine
 
 
-
 ### Prerequisites
 - Node.js (v16 or later)
 - npm or yarn
@@ -164,7 +163,7 @@ The application will be available at http://localhost:8080
 
 
 
-## Ancient Greek Listening app with coqui-ai on docker
+## Ancient Greek Listening app with coqui-ai model on docker
 
 
 ### Prerequisites
@@ -236,3 +235,44 @@ streamlit run frontend/main.py
 ### Listening Demo
 
  [Listening Demo](https://github.com/vasiliki77/free-genai-bootcamp-2025/blob/main/listening_demo.mp4)
+
+
+## Writing Practice of Diacritics
+
+Greek orthography has used a variety of diacritics starting in the Hellenistic period. The more complex polytonic orthography, which includes five diacritics, notates Ancient Greek phonology. The simpler monotonic orthography, introduced in 1982, corresponds to Modern Greek phonology, and requires only two diacritics.
+
+https://en.wikipedia.org/wiki/Greek_diacritics
+
+Polytonic orthography includes:
+
+- acute accent (´)
+- circumflex accent (ˆ)
+- grave accent (`); these 3 accents indicate different kinds of pitch accent
+- rough breathing (῾) indicates the presence of the /h/ sound before a letter
+- smooth breathing (᾿) indicates the absence of /h/.
+
+
+## Installing greek polytonic keyboard
+
+### **Windows**  
+Go to **Settings** > **Time & Language** > **Language & region**. Click **Add a language**, search for **Greek**, and install it. Then, click on **Greek**, go to **Keyboard options**, and add **Greek Polytonic**. Switch between keyboards using **Win + Space**.
+
+### **Mac**  
+Open **System Settings** > **Keyboard** > **Input Sources**. Click **Add (+)**, search for **Greek Polytonic**, and select it. Enable **Show Input menu in menu bar** to switch easily. Use **Cmd + Space** to toggle keyboards.
+
+### **Ubuntu**  
+Go to **Settings** > **Keyboard** > **Input Sources**, click **+ (Add)**, search for **Greek (polytonic)**, and select it. Set it as default or switch using **Super (Windows key) + Space**.
+
+### Running the app
+
+In a new terminal
+```bash
+cd learn_ancient_greek_app/writing-practice
+docker build -t writing-practice-app .
+docker run -p 8502:8502 writing-practice-app
+```
+
+### Writing Demo
+ ![Writing Demo](writing_demo.gif)
+
+

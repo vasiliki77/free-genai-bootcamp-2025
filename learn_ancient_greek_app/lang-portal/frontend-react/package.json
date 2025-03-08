@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:all": "concurrently \"vite\" \"cd ../../listening-comp && streamlit run app.py\"",
+    "dev:all": "concurrently \"vite\" \"cd ../../listening-comp && streamlit run app.py\" \"cd ../../writing-practice && streamlit run app/main.py --server.port=8502\"",
     "build": "tsc && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",

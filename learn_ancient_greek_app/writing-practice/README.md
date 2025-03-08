@@ -28,8 +28,8 @@ Go to **Settings** > **Keyboard** > **Input Sources**, click **+ (Add)**, search
 ## Running the app
 
 ```bash
-cd writing-practice
+cd learn_ancient_greek_app/writing-practice
 docker build -t writing-practice-app .
-docker run -p 8501:8501 writing-practice-app
+docker run -p 8502:8502 writing-practice-app
 ```
 
