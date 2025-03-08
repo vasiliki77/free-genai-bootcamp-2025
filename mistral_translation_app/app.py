@@ -77,9 +77,11 @@ def read_root():
     return {"status": "Mistral Translation API is running"}
 
 @app.post("/translate")
-async def translate(sentence: str, api_key: str = Header(None)):
+async def translate(sentence: str, authorization: str = Header(None)):
     secret_api_key = os.getenv("SECRET_API_KEY")
-    if api_key != secret_api_key:
+    expected_auth = f"Bearer {secret_api_key}"
+    
+    if authorization != expected_auth:
         raise HTTPException(status_code=401, detail="Invalid API key")
 
     prompt = f"""
@@ -94,6 +96,7 @@ English: Know thyself. → <START>Γνῶθι σεαυτόν.<END>
 English: Hello world. → <START>Χαῖρε, ὦ κόσμε!<END>
 English: I love philosophy. → <START>Φιλοσοφίαν φιλῶ.<END>
 
+Do not repeat the Examples nor the instructions you were given.
 Now translate accurately:
 English: {sentence} → <START>"""
 

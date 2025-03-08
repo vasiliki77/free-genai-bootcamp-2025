@@ -20,7 +20,7 @@ This guide provides step-by-step instructions to reproduce and deploy the Mistra
 - [Lightning.ai](https://lightning.ai/) account
 - Hugging Face account and [API token](https://huggingface.co/settings/tokens)
 
-### 1. Clone the Repository into a Lightning studio
+### 1. Clone the Repository into a Lightning studio with GPU
 
 ```bash
 git clone <repository-url>
@@ -55,14 +55,15 @@ To run your API locally and test:
 ```bash
 python app.py
 ```
+This might take a few minutes.
 
+### In another terminal
 
 Test translation example:
 
 ```bash
 ⚡ ~ curl -X POST "http://localhost:8080/translate?sentence=Wildboars%20are%20at%20the%20door,%20did%20you%20leave%20the%20garbage%20out?" -H "api-key: a_secret_key"
 ```
-
 
 
 ### Expected JSON Response:
@@ -79,6 +80,49 @@ The app uses Mistral-7B-Instruct-v0.3, a general-purpose instruction-following m
 - Extend and diversify prompt examples to improve generalization further.
 
 The current setup demonstrates clearly how prompt engineering enhances performance and provides a stable foundation suitable for the bootcamp evaluation.
+
+
+### [Host Server API](https://lightning.ai/docs/overview/studios/host-server-apis)
+
+- At the right pane, click the plus sign and choose Serving. 
+- Install API builder. 
+- Then at the right pane there will be an additional symbol, the API builder. Click to configure.
+- New API
+- Add a name, port 8080 for the server, Authentication type Token and add your a_secret_key
+- You may choose the auto start option. In that case, provide the following command:
+```bash
+HF_TOKEN='your_hf_token' SECRET_API_KEY='a_secret_key' python mistral_translation_app/app.py
+```
+- Once created, open the API, get the curl command and try it from your local machine. 
+```bash
+curl --request GET \
+  --url https://8080-01xxxxxxxxxxxxxxxxxxxxxxxx.cloudspaces.litng.ai/ \
+  --header 'Authorization: Bearer a_secret_key'
+{"status":"Mistral Translation API is running"}
+```
+
+- Try an example
+```bash
+curl -X POST "https://8080-01xxxxxxxxxxxxxxxxxxxxxxxx.cloudspaces.litng.ai/translate?sentence=Hello%20world" -H "Authorization: Bearer a_secret_key"
+{"original":"Hello world","translation":"and","full_response":"\nTranslate the following English sentence accurately into Classical Ancient Greek (Attic dialect). \nUse correct grammar, vocabulary, and polytonic diacritics. \nProvide ONLY the Ancient Greek translation enclosed by <START> and <END> tags, nothing else.\n\nExamples:\nEnglish: Wisdom is virtue. → <START>Σοφία ἐστὶν ἀρετή.<END>\nEnglish: Life is short. → <START>Ὁ βίος βραχύς ἐστιν.<END>\nEnglish: Know thyself. → <START>Γνῶθι σεαυτόν.<END>\nEnglish: Hello world. → <START>Χαῖρε, ὦ κόσμε!<END>\nEnglish: I love philosophy. → <START>Φιλοσοφίαν φιλῶ.<END>\n\nNow translate accurately:\nEnglish: Hello world → <START>Χαῖρε, ὦ κόσμε!<END>"}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Deploy language portal on your local machine
