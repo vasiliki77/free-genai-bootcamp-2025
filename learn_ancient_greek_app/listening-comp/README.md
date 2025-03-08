@@ -12,7 +12,7 @@ An interactive application for learning Ancient Greek with AI-powered question g
 1. Clone the repository:
 ```bash
 git clone <your-repo-url>
-cd listening-comp
+cd learn_ancient_greek_app/listening-comp
 ```
 
 1. Create the conda environment:
@@ -52,7 +52,8 @@ python3 TTS/server/server.py --model_name tts_models/el/cv/vits
 
 3. In a new terminal, install the requirements:
 ```bash
-cd listening-comp
+cd learn_ancient_greek_app/listening-comp
+conda activate greek-learning
 pip install -r requirements.txt
 ```
 
@@ -68,6 +69,8 @@ python backend/main.py
 
 6. Start the Streamlit frontend (in another new terminal):
 ```bash
+cd learn_ancient_greek_app/listening-comp
+conda activate greek-learning
 streamlit run frontend/main.py
 ```
 

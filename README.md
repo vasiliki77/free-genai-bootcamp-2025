@@ -116,7 +116,7 @@ curl -X POST "https://8080-01xxxxxxxxxxxxxxxxxxxxxxxx.cloudspaces.litng.ai/trans
 - npm or yarn
 - Git
 
-### 1: Clone the Repository
+### 1: Get in the directory
 ```bash
 cd learn_ancient_greek_app/lang-portal/frontend-react
 ```
@@ -162,3 +162,77 @@ The application will be available at http://localhost:8080
 
  ![Translation Demo](translation_demo.gif)
 
+
+
+## Ancient Greek Listening app with coqui-ai on docker
+
+
+### Prerequisites
+- [Anaconda](https://www.anaconda.com/download) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html)
+
+### Installation
+
+1. Get in the directory:
+```bash
+cd learn_ancient_greek_app/listening-comp
+```
+
+1. Create the conda environment:
+```bash
+conda env create -f environment.yml
+```
+2. Activate the conda environment in all the terminals:
+```bash
+conda activate greek-learning
+```
+
+### Features
+
+- AI-powered question generation for:
+  - Reading comprehension
+  - Grammar
+  - Vocabulary
+- Interactive UI with immediate feedback
+- Audio support for Greek text
+
+
+### Running the Application
+
+
+1. First, run the container with bash entrypoint:
+```bash
+docker run --rm -it -p 5002:5002 --entrypoint /bin/bash ghcr.io/coqui-ai/tts-cpu
+```
+
+2. Inside the container, start the TTS server:
+```bash
+python3 TTS/server/server.py --model_name tts_models/el/cv/vits
+```
+
+3. In a new terminal, install the requirements:
+```bash
+cd learn_ancient_greek_app/listening-comp
+conda activate greek-learning
+pip install -r requirements.txt
+```
+
+4. Initialize the database:
+```bash
+python init_db.py
+```
+
+5. Start the Flask backend:
+```bash
+python backend/main.py
+```
+
+6. Start the Streamlit frontend (in another new terminal):
+```bash
+cd learn_ancient_greek_app/listening-comp
+conda activate greek-learning
+streamlit run frontend/main.py
+```
+
+### Listening Demo
+
+ [Listening Demo](https://github.com/vasiliki77/free-genai-bootcamp-2025/blob/main/listening_demo.mp4)
