@@ -158,5 +158,7 @@ npm run dev
 The application will be available at http://localhost:8080
 
 
-### ![Translation Demo](translation_demo.gif)
+### Translation Demo
+
+ ![Translation Demo](translation_demo.gif)
 
