@@ -79,8 +79,6 @@ The app uses Mistral-7B-Instruct-v0.3, a general-purpose instruction-following m
 - Fine-tune a model specifically on a dataset of English-to-Ancient Greek translations for enhanced accuracy.
 - Extend and diversify prompt examples to improve generalization further.
 
-The current setup demonstrates clearly how prompt engineering enhances performance and provides a stable foundation suitable for the bootcamp evaluation.
-
 
 ### [Host Server API](https://lightning.ai/docs/overview/studios/host-server-apis)
 
@@ -88,7 +86,7 @@ The current setup demonstrates clearly how prompt engineering enhances performan
 - Install API builder. 
 - Then at the right pane there will be an additional symbol, the API builder. Click to configure.
 - New API
-- Add a name, port 8080 for the server, Authentication type Token and add your a_secret_key
+- Add a name, port 8080 for the server,(it might say "Did not detect a server running on port 8080", as long as the server runs, ignore this message) Authentication type Token and add your a_secret_key
 - You may choose the auto start option. In that case, provide the following command:
 ```bash
 HF_TOKEN='your_hf_token' SECRET_API_KEY='a_secret_key' python mistral_translation_app/app.py
@@ -109,21 +107,56 @@ curl -X POST "https://8080-01xxxxxxxxxxxxxxxxxxxxxxxx.cloudspaces.litng.ai/trans
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Deploy language portal on your local machine
+
+
+
+### Prerequisites
+- Node.js (v16 or later)
+- npm or yarn
+- Git
+
+### 1: Clone the Repository
+```bash
+cd learn_ancient_greek_app/lang-portal/frontend-react
+```
+
+### 2: Install Dependencies
+```bash
+npm install
+```
+
+### Step 3: Configure the API Endpoint
+Open `vite.config.ts` and update the API target with your Lightning API URL:
+
+```typescript
+server: {
+  proxy: {
+    '/api': {
+      target: 'YOUR_LIGHTNING_API_URL_HERE',  // Replace with your API endpoint
+      changeOrigin: true,
+      rewrite: (path) => path.replace(/^\/api/, '')
+    }
+  }
+}
+```
+
+### 4: Add Your Authorization Token
+Open `src/components/ui/TranslationComponent.tsx` and update the Authorization header:
+
+```typescript
+headers: {
+  Authorization: 'Bearer YOUR_API_KEY_HERE'  // Replace with your API key
+}
+```
+
+### 5: Start the Development Server
+```bash
+npm run dev
+```
+
+The application will be available at http://localhost:8080
+
+
+### ![Translation Demo](translation_demo.gif)
 

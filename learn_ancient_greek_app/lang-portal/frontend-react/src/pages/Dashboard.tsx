@@ -1,50 +1,61 @@
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   return (
-    <div className="space-y-8 animate-fade-in">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Welcome to your language learning journey
-        </p>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex flex-col md:flex-row items-center gap-8 mb-10">
+        <div className="w-full md:w-1/3">
+          <img 
+            src="/images/high_priestess.jpg" 
+            alt="Ancient Greek woman high priestess" 
+            className="rounded-lg shadow-lg max-w-full h-auto"
+          />
+        </div>
+        <div className="w-full md:w-2/3">
+          <h1 className="text-3xl font-bold mb-4">Learn Ancient Greek with the High Priestess</h1>
+          <p className="text-lg text-gray-700 mb-6">
+            Embark on a journey to master the language of philosophers, poets, and historians. 
+            Select an activity below to begin your learning adventure.
+          </p>
+        </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle>Last Session</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>No recent sessions</p>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Translation Card */}
+        <Link 
+          to="/translate" 
+          className="bg-white hover:bg-blue-50 transition-colors p-6 rounded-lg shadow border border-gray-200 text-center"
+        >
+          <h2 className="text-2xl font-semibold mb-2 text-blue-700">Translation</h2>
+          <p className="text-gray-600 mb-4">Practice translating English to Ancient Greek</p>
+          <div className="bg-blue-600 text-white py-2 px-4 rounded inline-block">
+            Start Translating
+          </div>
+        </Link>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Progress Overview</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>Start learning to see your progress</p>
-          </CardContent>
-        </Card>
+        {/* Listening Card */}
+        <Link 
+          to="/listening" 
+          className="bg-white hover:bg-green-50 transition-colors p-6 rounded-lg shadow border border-gray-200 text-center"
+        >
+          <h2 className="text-2xl font-semibold mb-2 text-green-700">Listening</h2>
+          <p className="text-gray-600 mb-4">Improve your Ancient Greek listening comprehension</p>
+          <div className="bg-green-600 text-white py-2 px-4 rounded inline-block">
+            Start Listening
+          </div>
+        </Link>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <button className="w-full bg-primary text-primary-foreground px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
-                Start New Session
-              </button>
-              <button className="w-full bg-secondary text-secondary-foreground px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
-                View Words
-              </button>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Writing Card */}
+        <Link 
+          to="/writing" 
+          className="bg-white hover:bg-purple-50 transition-colors p-6 rounded-lg shadow border border-gray-200 text-center"
+        >
+          <h2 className="text-2xl font-semibold mb-2 text-purple-700">Writing</h2>
+          <p className="text-gray-600 mb-4">Practice writing Ancient Greek with proper diacritics</p>
+          <div className="bg-purple-600 text-white py-2 px-4 rounded inline-block">
+            Start Writing
+          </div>
+        </Link>
       </div>
     </div>
   );

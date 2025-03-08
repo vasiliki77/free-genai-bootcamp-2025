@@ -35,7 +35,7 @@ conda activate greek-learning
 - Audio support for Greek text
 
 
->For additional context, read the [journal entry](../journal/week2.md).
+>For additional context, read the [journal entry](../../journal/week2.md).
 
 ### Running the Application
 

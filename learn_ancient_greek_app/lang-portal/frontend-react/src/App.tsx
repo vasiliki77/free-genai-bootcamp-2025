@@ -1,10 +1,12 @@
-
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NavBar from "./components/layout/NavBar";
+import TranslationComponent from './components/ui/TranslationComponent';
+import ListeningPlaceholder from "./components/placeholders/listeningPlaceholder";
+import WritingPlaceholder from "./components/placeholders/WritingPlaceholder";
 
 // Lazy load pages
 import { lazy, Suspense } from "react";
@@ -37,16 +39,11 @@ const App = () => (
               }
             >
               <Routes>
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/" element={<Dashboard />} />
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/study-activities" element={<StudyActivities />} />
-                <Route path="/study-activities/:id" element={<StudyActivity />} />
-                <Route path="/words" element={<Words />} />
-                <Route path="/words/:id" element={<Word />} />
-                <Route path="/groups" element={<Groups />} />
-                <Route path="/groups/:id" element={<Group />} />
-                <Route path="/sessions" element={<Sessions />} />
-                <Route path="/sessions/:id" element={<Session />} />
+                <Route path="/translate" element={<TranslationComponent />} />
+                <Route path="/listening" element={<ListeningPlaceholder />} />
+                <Route path="/writing" element={<WritingPlaceholder />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
