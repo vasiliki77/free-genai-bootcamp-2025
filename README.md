@@ -1,13 +1,20 @@
 # free-genai-bootcamp-2025
 
-## Table of Contents
-- [Table of Contents](#table-of-contents)
+> Journals
 - [Preweek Journal](journal/week0.md)
 - [Week 1 Journal](journal/week1.md)
 - [Week 2 Journal](journal/week2.md)
 - [Week 3 Journal](journal/week3.md)
 - [Week 4 Journal](journal/week4.md)
 
+## Table of Contents
+- [Table of Contents](#table-of-contents)
+- [Ancient Greek Translation API with Mistral 7B Instruct v0.3 on Lightning.ai](#ancient-greek-translation-api-with-mistral-7b-instruct-v03-on-lightningai)
+- [Deploy language portal on your local machine](#deploy-language-portal-on-your-local-machine)
+- [Ancient Greek Listening app with coqui-ai model on docker](#ancient-greek-listening-app-with-coqui-ai-model-on-docker)
+- [Writing Practice of Diacritics](#writing-practice-of-diacritics)
+
+# **Build the app**
 
 ## Ancient Greek Translation API with Mistral 7B Instruct v0.3 on Lightning.ai
 
@@ -176,23 +183,14 @@ The application will be available at http://localhost:8080
 cd learn_ancient_greek_app/listening-comp
 ```
 
-1. Create the conda environment:
+2. Create the conda environment:
 ```bash
 conda env create -f environment.yml
 ```
-2. Activate the conda environment in all the terminals:
+3. Activate the conda environment in all the terminals:
 ```bash
 conda activate greek-learning
 ```
-
-### Features
-
-- AI-powered question generation for:
-  - Reading comprehension
-  - Grammar
-  - Vocabulary
-- Interactive UI with immediate feedback
-- Audio support for Greek text
 
 
 ### Running the Application
@@ -276,3 +274,6 @@ docker run -p 8502:8502 writing-practice-app
  ![Writing Demo](writing_demo.gif)
 
 
+## Summary
+
+The app works on http://localhost:8080/dashboard
