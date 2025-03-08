@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+transformers
+torch
+gradio
+sentencepiece
+accelerate>=0.26.0
