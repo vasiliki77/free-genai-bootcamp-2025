@@ -10,6 +10,7 @@ For a more detailed presentation, please see the SR&ED [Final Project Presentati
 - [Week 1 Journal](journal/week1.md)
 - [Week 2 Journal](journal/week2.md)
 - [Week 3 Journal](journal/week3.md)
+- [Week 4 Journal](journal/week4.md)
 
 ## Table of Contents
 - [Table of Contents](#table-of-contents)
