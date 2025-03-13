@@ -1,5 +1,10 @@
 # free-genai-bootcamp-2025
 
+## Project Overview
+
+For a more detailed presentation, please see the SR&ED [Final Project Presentation](final_project_presentation.md)
+
+
 > Journals
 - [Preweek Journal](journal/week0.md)
 - [Week 1 Journal](journal/week1.md)
@@ -162,6 +167,8 @@ npm run dev
 ```
 
 The application will be available at http://localhost:8080
+
+The image was generated using Bing Image Creator
 
 
 ### Translation Demo
