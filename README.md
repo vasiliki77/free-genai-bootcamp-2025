@@ -60,9 +60,9 @@ export HF_TOKEN='your_huggingface_token_here'
 export SECRET_API_KEY='a_secret_key'
 ```
 
-### 4. Run Locally (Testing)
+### 4. Run (Testing)
 
-To run your API locally and test:
+To run your API and test:
 
 ```bash
 python app.py
