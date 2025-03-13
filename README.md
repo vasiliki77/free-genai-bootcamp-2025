@@ -168,7 +168,7 @@ npm run dev
 
 The application will be available at http://localhost:8080
 
-The image was generated using Bing Image Creator
+The image of the High Priestess was generated using Bing Image Creator.
 
 
 ### Translation Demo
