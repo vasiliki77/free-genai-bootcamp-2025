@@ -165,6 +165,7 @@ headers: {
 ```bash
 npm run dev
 ```
+Vite requires Node.js versions 18 or 20
 
 The application will be available at http://localhost:8080
 

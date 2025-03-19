@@ -20,7 +20,7 @@ const TranslationComponent: React.FC = () => {
         null,
         {
           headers: {
-            Authorization: 'Bearer KLEIDI'
+            Authorization: 'Bearer YOUR_API_KEY_HERE'
           }
         }
       );
