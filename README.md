@@ -74,7 +74,7 @@ This might take a few minutes.
 Test translation example:
 
 ```bash
-⚡ ~ curl -X POST "http://localhost:8080/translate?sentence=Wildboars%20are%20at%20the%20door,%20did%20you%20leave%20the%20garbage%20out?" -H "api-key: a_secret_key"
+curl -X POST "http://localhost:8080/translate?sentence=Wildboars%20are%20at%20the%20door,%20did%20you%20leave%20the%20garbage%20out?" -H "Authorization: Bearer <a_secret_key>"
 ```
 
 
