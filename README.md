@@ -35,8 +35,8 @@ This guide provides step-by-step instructions to reproduce and deploy the Mistra
 ### 1. Clone the Repository into a Lightning studio with GPU
 
 ```bash
-git clone <repository-url>
-cd mistral_translation_app
+git clone git@github.com:vasiliki77/free-genai-bootcamp-2025.git
+cd free-genai-bootcamp-2025/mistral_translation_app
 ```
 
 ### 2. Install Dependencies
@@ -87,10 +87,6 @@ curl -X POST "http://localhost:8080/translate?sentence=Wildboars%20are%20at%20th
 
 The app uses Mistral-7B-Instruct-v0.3, a general-purpose instruction-following model. Prompt engineering with explicit examples significantly improves translation accuracy into Ancient Greek. However, because the model is not fine-tuned specifically for Ancient Greek translation, complex sentences or unusual vocabulary might lead to occasional inaccuracies.
 
-**Recommended next steps:**  
-- Fine-tune a model specifically on a dataset of English-to-Ancient Greek translations for enhanced accuracy.
-- Extend and diversify prompt examples to improve generalization further.
-
 
 ### [Host Server API](https://lightning.ai/docs/overview/studios/host-server-apis)
 
@@ -114,6 +110,9 @@ curl --request GET \
 - Try an example
 ```bash
 curl -X POST "https://8080-01xxxxxxxxxxxxxxxxxxxxxxxx.cloudspaces.litng.ai/translate?sentence=Hello%20world" -H "Authorization: Bearer a_secret_key"
+```
+Expected output:
+```
 {"original":"Hello world","translation":"and","full_response":"\nTranslate the following English sentence accurately into Classical Ancient Greek (Attic dialect). \nUse correct grammar, vocabulary, and polytonic diacritics. \nProvide ONLY the Ancient Greek translation enclosed by <START> and <END> tags, nothing else.\n\nExamples:\nEnglish: Wisdom is virtue. → <START>Σοφία ἐστὶν ἀρετή.<END>\nEnglish: Life is short. → <START>Ὁ βίος βραχύς ἐστιν.<END>\nEnglish: Know thyself. → <START>Γνῶθι σεαυτόν.<END>\nEnglish: Hello world. → <START>Χαῖρε, ὦ κόσμε!<END>\nEnglish: I love philosophy. → <START>Φιλοσοφίαν φιλῶ.<END>\n\nNow translate accurately:\nEnglish: Hello world → <START>Χαῖρε, ὦ κόσμε!<END>"}
 ```
 
@@ -127,9 +126,10 @@ curl -X POST "https://8080-01xxxxxxxxxxxxxxxxxxxxxxxx.cloudspaces.litng.ai/trans
 - npm or yarn
 - Git
 
-### 1: Get in the directory
+### 1: Clone the repo and get in the directory
 ```bash
-cd learn_ancient_greek_app/lang-portal/frontend-react
+git clone git@github.com:vasiliki77/free-genai-bootcamp-2025.git
+cd free-genai-bootcamp-2025/learn_ancient_greek_app/lang-portal/frontend-react
 ```
 
 ### 2: Install Dependencies
