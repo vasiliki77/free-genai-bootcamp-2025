@@ -78,7 +78,7 @@ curl -X POST "http://localhost:8080/translate?sentence=Wildboars%20are%20at%20th
 ```
 
 
-### Expected JSON Response:
+Expected JSON Response:
 
 ```json
 {"original":"Wildboars are at the door, did you leave the garbage out?","translation":"and","full_response":"\nTranslate the following English sentence accurately into Classical Ancient Greek (Attic dialect). \nUse correct grammar, vocabulary, and polytonic diacritics. \nProvide ONLY the Ancient Greek translation enclosed by <START> and <END> tags, nothing else.\n\nExamples:\nEnglish: Wisdom is virtue. → <START>Σοφία ἐστὶν ἀρετή.<END>\nEnglish: Life is short. → <START>Ὁ βίος βραχύς ἐστιν.<END>\nEnglish: Know thyself. → <START>Γνῶθι σεαυτόν.<END>\nEnglish: Hello world. → <START>Χαῖρε, ὦ κόσμε!<END>\nEnglish: I love philosophy. → <START>Φιλοσοφίαν φιλῶ.<END>\n\nNow translate accurately:\nEnglish: Wildboars are at the door, did you leave the garbage out? → <START>Ἄιμνοι εἰσὶν τῇ θύρᾳ, ἦλθες λιπὼν τὸ σκόροπον;<END>"}
@@ -104,6 +104,9 @@ HF_TOKEN='your_hf_token' SECRET_API_KEY='a_secret_key' python mistral_translatio
 curl --request GET \
   --url https://8080-01xxxxxxxxxxxxxxxxxxxxxxxx.cloudspaces.litng.ai/ \
   --header 'Authorization: Bearer a_secret_key'
+```
+Output:
+```
 {"status":"Mistral Translation API is running"}
 ```
 
